@@ -7,7 +7,7 @@ title = "Junren Li"
   [[menu.main]]
     identifier = "about"
     name = "About Me"
-    url = "/about-me/"
+    url = "/"
     weight = 10
   [[menu.main]]
     identifier = "research"
