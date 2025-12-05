@@ -1,0 +1,4 @@
+languageCode = 'en-us'
+theme = "PaperMod"
+baseURL = "https://junren.li/"
+title = "Junren Li"
