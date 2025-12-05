@@ -2,3 +2,42 @@ languageCode = 'en-us'
 theme = "PaperMod"
 baseURL = "https://junren.li/"
 title = "Junren Li"
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About Me"
+    url = "/about-me/"
+    weight = 10
+  [[menu.main]]
+    identifier = "research"
+    name = "Research"
+    url = "/research/"
+    weight = 20
+  [[menu.main]]
+    identifier = "off-duty"
+    name = "Off-duty"
+    url = "/off-duty/"
+    weight = 30
+  [[menu.main]]
+    identifier = "ethanol"
+    name = "Ethanol"
+    url = "/off-duty/ethanol/"
+    parent = "off-duty"
+    weight = 10
+  [[menu.main]]
+    identifier = "life-diffusion-model"
+    name = "Life Diffusion Model"
+    url = "/off-duty/life-diffusion-model/"
+    parent = "off-duty"
+    weight = 20
+  [[menu.main]]
+    identifier = "gallery"
+    name = "Gallery"
+    url = "/gallery/"
+    weight = 40
+  [[menu.main]]
+    identifier = "misc"
+    name = "Misc"
+    url = "/misc/"
+    weight = 50
