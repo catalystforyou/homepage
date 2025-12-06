@@ -6,6 +6,7 @@ cover:
     image: "https://img.junren.li/whiskey_flow.jpg"
     alt: "Ethanol Preview"
     relative: false
+    hidden: true
 summary: " "
 hideSummary: true
 ---
