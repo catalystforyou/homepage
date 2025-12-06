@@ -6,7 +6,6 @@ cover:
     image: "https://img.junren.li/whiskey_flow.jpg"
     alt: "Ethanol Preview"
     relative: false
-    hidden: true
 summary: " "
 hideSummary: true
 ---
@@ -18,3 +17,9 @@ hideSummary: true
 - Finished in Wine Casks
 {{< /card >}}
 {{< /ethanol-cards >}}
+
+<style>
+    .entry-cover {
+        display: none !important;
+    }
+</style>
