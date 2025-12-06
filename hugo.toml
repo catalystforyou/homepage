@@ -32,11 +32,6 @@ title = "Junren Li"
     parent = "off-duty"
     weight = 20
   [[menu.main]]
-    identifier = "gallery"
-    name = "Gallery"
-    url = "/gallery/"
-    weight = 40
-  [[menu.main]]
     identifier = "misc"
     name = "Misc"
     url = "/misc/"
