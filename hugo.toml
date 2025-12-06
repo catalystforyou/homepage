@@ -41,3 +41,8 @@ title = "Junren Li"
     name = "Misc"
     url = "/misc/"
     weight = 50
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
