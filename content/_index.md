@@ -33,7 +33,7 @@ draft: false
             To ensure my computational work remains grounded in physical reality, I also served as a visiting research student at the Center for Algorithmic and Roboticized Synthesis, IBS (Oct 2024 – Dec 2024). Advised by <a href="http://www.grzybowski-group.net/people/bartosz.asp" target="_blank">Prof. Bartosz Grzybowski</a>, I gained valuable insights into chemical automation and catalyst development, effectively balancing my AI expertise with deep chemical domain knowledge.
         </p>
         <p>
-            I am always open to discussions on AI, Chemistry, and the future of automated science. Feel free to reach out! You can also find my publications on <a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank">Google Scholar</a>.
+            I am always open to discussions on AI, Chemistry, and the future of automated science. Feel free to reach out me at <a href="catalystforyou@outlook.com" target="_blank">catalystforyou@outlook.com</a>. You can also find my publications on <a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank">Google Scholar</a>.
         </p>
     </div>
 </div>
