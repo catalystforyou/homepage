@@ -25,11 +25,11 @@
             var marker = L.marker([point.lat, point.lng]).addTo(map);
             var popupContent = `
                 <div style="text-align: center;">
-                    <b>${point.title}</b><br>
-                    <img src="${point.img}" style="width: 500px; height: auto; margin-top: 5px;">
+                    <b style="font-size: 1.2em;">${point.title}</b><br>
+                    <img src="${point.img}" style="width: 1000px; height: auto; margin-top: 10px;">
                 </div>
             `;
-            marker.bindPopup(popupContent);
+            marker.bindPopup(popupContent, { maxWidth: 1100, minWidth: 1000 });
 
             marker.on('mouseover', function (e) {
                 this.openPopup();
