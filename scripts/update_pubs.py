@@ -80,24 +80,94 @@ def parse_bibtex(file_path):
 
     return entries
 
+def decode_latex(text):
+    """
+    Simple decoder for common LaTeX accents and special characters.
+    """
+    if not text:
+        return ""
+    
+    replacements = [
+        (r"{\\'a}", "á"), (r"\\'a", "á"),
+        (r"{\\'e}", "é"), (r"\\'e", "é"),
+        (r"{\\'i}", "í"), (r"\\'i", "í"),
+        (r"{\\'o}", "ó"), (r"\\'o", "ó"),
+        (r"{\\'u}", "ú"), (r"\\'u", "ú"),
+        (r"{\\'c}", "ć"), (r"\\'c", "ć"),
+        (r"{\\'n}", "ń"), (r"\\'n", "ń"),
+        (r"{\\'s}", "ś"), (r"\\'s", "ś"),
+        (r"{\\'z}", "ź"), (r"\\'z", "ź"),
+        (r"{\\`a}", "à"), (r"\\`a", "à"),
+        (r"{\\`e}", "è"), (r"\\`e", "è"),
+        (r"{\\`i}", "ì"), (r"\\`i", "ì"),
+        (r"{\\`o}", "ò"), (r"\\`o", "ò"),
+        (r"{\\`u}", "ù"), (r"\\`u", "ù"),
+        (r"{\\\"a}", "ä"), (r"\\\"a", "ä"),
+        (r"{\\\"e}", "ë"), (r"\\\"e", "ë"),
+        (r"{\\\"i}", "ï"), (r"\\\"i", "ï"),
+        (r"{\\\"o}", "ö"), (r"\\\"o", "ö"),
+        (r"{\\\"u}", "ü"), (r"\\\"u", "ü"),
+        (r"{\\^a}", "â"), (r"\\^a", "â"),
+        (r"{\\^e}", "ê"), (r"\\^e", "ê"),
+        (r"{\\^i}", "î"), (r"\\^i", "î"),
+        (r"{\\^o}", "ô"), (r"\\^o", "ô"),
+        (r"{\\^u}", "û"), (r"\\^u", "û"),
+        (r"{\\~n}", "ñ"), (r"\\~n", "ñ"),
+        (r"{\\c{c}}", "ç"), (r"\\c{c}", "ç"),
+        (r"{\\aa}", "å"), (r"\\aa", "å"),
+        (r"{\\o}", "ø"), (r"\\o", "ø"),
+        (r"{\\ss}", "ß"), (r"\\ss", "ß"),
+        (r"---", "—"), (r"--", "–"),
+        (r"{", ""), (r"}", "") # Remove remaining braces
+    ]
+    
+    for pattern, replacement in replacements:
+        text = text.replace(pattern, replacement)
+    return text
+
 def format_authors(author_str):
     if not author_str:
         return ""
+    
+    # Decode LaTeX characters first
+    author_str = decode_latex(author_str)
+    
     authors = author_str.split(' and ')
     formatted_authors = []
+    has_equal_contrib = False
+
     for author in authors:
+        author = author.strip()
         is_me = False
+        is_equal = False
+        
+        # Check for equal contribution marker (user should add * in bibtex)
+        if author.endswith('*'):
+            is_equal = True
+            author = author[:-1].strip()
+            has_equal_contrib = True
+            
         for my_name in MY_NAME_PATTERNS:
+            # Simple check: if my name is in the author string
+            # We remove * before checking
             if my_name.lower() in author.lower():
                 is_me = True
                 break
         
+        display_name = author
         if is_me:
-            formatted_authors.append(f"<strong>{author}</strong>")
-        else:
-            formatted_authors.append(author)
+            display_name = f"<strong>{display_name}</strong>"
             
-    return ", ".join(formatted_authors)
+        if is_equal:
+            display_name += "*"
+            
+        formatted_authors.append(display_name)
+            
+    result = ", ".join(formatted_authors)
+    if has_equal_contrib:
+        result += '<br><span style="font-size: 0.8em; color: #666;">* Equal contribution</span>'
+        
+    return result
 
 def generate_markdown(entries):
     # Sort by year descending

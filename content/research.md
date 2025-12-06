@@ -15,7 +15,7 @@ summary: "My publications and research projects."
 
 <div class="publication-entry" style="margin-bottom: 20px;">
     <div style="font-size: 1.1em; font-weight: bold;">SUPERChem: A Multimodal Reasoning Benchmark in Chemistry</div>
-    <div style="color: #444;">Zhao, Zehua, Huang, Zhixian, <strong>Li, Junren</strong>, Lin, Siyu, Zhou, Junting, Cao, Fengqi, Zhou, Kun, Ge, Rui, Long, Tingting, Zhu, Yuexiang, others</div>
+    <div style="color: #444;">Zhao, Zehua*, Huang, Zhixian*, <strong>Li, Junren</strong>*, Lin, Siyu*, Zhou, Junting, Cao, Fengqi, Zhou, Kun, Ge, Rui, Long, Tingting, Zhu, Yuexiang, et al.<br><span style="font-size: 0.8em; color: #666;">* Equal contribution</span></div>
     <div style="font-style: italic; color: #666;">arXiv preprint arXiv:2512.01274, 2025</div>
 </div>
 
@@ -33,7 +33,7 @@ summary: "My publications and research projects."
 
 <div class="publication-entry" style="margin-bottom: 20px;">
     <div style="font-size: 1.1em; font-weight: bold;">RetroRanker: leveraging reaction changes to improve retrosynthesis prediction through re-ranking</div>
-    <div style="color: #444;"><strong>Li, Junren</strong>, Fang, Lei, Lou, Jian-Guang</div>
+    <div style="color: #444;"><strong>Li, Junren</strong>*, Fang, Lei*, Lou, Jian-Guang<br><span style="font-size: 0.8em; color: #666;">* Equal contribution</span></div>
     <div style="font-style: italic; color: #666;">Journal of Cheminformatics, 2023</div>
 </div>
 
@@ -45,13 +45,13 @@ summary: "My publications and research projects."
 
 <div class="publication-entry" style="margin-bottom: 20px;">
     <div style="font-size: 1.1em; font-weight: bold;">Reaxtica: A knowledge-guided machine learning platform for fast and accurate reaction selectivity and yield prediction</div>
-    <div style="color: #444;">Lin, Kangjie, <strong>Li, Junren</strong>, Lin, Haoyu, Pei, Jianfeng, Lai, Luhua</div>
+    <div style="color: #444;">Lin, Kangjie*, <strong>Li, Junren</strong>*, Lin, Haoyu, Pei, Jianfeng, Lai, Luhua<br><span style="font-size: 0.8em; color: #666;">* Equal contribution</span></div>
     <div style="font-style: italic; color: #666;">2022</div>
 </div>
 
 <div class="publication-entry" style="margin-bottom: 20px;">
     <div style="font-size: 1.1em; font-weight: bold;">Chemist-aligned retrosynthesis by ensembling diverse inductive bias models</div>
-    <div style="color: #444;">Maziarz, Krzysztof, Liu, Guoqing, Tripp, Austin, <strong>Li, Junren</strong>, Gai{\'nski, Piotr, Segler, Marwin</div>
+    <div style="color: #444;">Maziarz, Krzysztof*, Liu, Guoqing*, Tripp, Austin, <strong>Li, Junren</strong>, Gai\'nski, Piotr, Segler, Marwin<br><span style="font-size: 0.8em; color: #666;">* Equal contribution</span></div>
     <div style="font-style: italic; color: #666;">EurIPS 2025 Workshop on SIMBIOCHEM, Unknown</div>
 </div>
 
