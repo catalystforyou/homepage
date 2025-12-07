@@ -46,11 +46,11 @@ hideSummary: true
 - A total Sherry Bomb!
 {{< /card >}}
 
-{{< card image="https://img.junren.li/IMG_3912.JPEG" title="Ardbeg from the Irish pub" >}}
+{{< card image="https://img.junren.li/IMG_3915.JPEG" title="Ardbeg from the Irish pub" >}}
 - Peat Monster!
 {{< /card >}}
 
-{{< card image="https://img.junren.li/IMG_3912.JPEG" title="The bill for that night" >}}
+{{< card image="https://img.junren.li/IMG_3918.JPEG" title="The bill for that night" >}}
 - Spent about 100 euros (or more, I was just too happy to count) that night...
 {{< /card >}}
 
@@ -58,7 +58,7 @@ hideSummary: true
 - A reasonably good taste with a moderate price for a blended whisky.
 {{< /card >}}
 
-{{< card image="https://img.junren.li/IMG_6183.JPEG" title="Hibiki (Suntory)" >}}
+{{< card image="https://img.junren.li/IMG_6184.JPEG" title="Hibiki (Suntory)" >}}
 - Exquisite and expensive. It was actually a gift from a friend, and I sincerely thank him for this.
 {{< /card >}}
 
@@ -66,7 +66,7 @@ hideSummary: true
 - A classic Highland style with its distinctive waxy notes and higher ABV.
 {{< /card >}}
 
-{{< card image="https://img.junren.li/IMG_6180.JPEG" title="Johnnie Walker Black Label (Sherry Finish)" >}}
+{{< card image="https://img.junren.li/IMG_6180.JPEG" title="Johnnie Walker (Sherry Finish)" >}}
 - A sherry-cask finished blend... but I wonder why they made this?
 {{< /card >}}
 
