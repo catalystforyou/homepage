@@ -81,6 +81,8 @@ def main():
                 if lat and lon:
                     # 获取日期作为标题
                     date_str = exif.get("DateTimeOriginal", "Unknown Date")
+                    # 把前两个冒号转化为.
+                    date_str = date_str.replace(":", ".", 2)
                     
                     # === 关键步骤：生成远程 URL ===
                     # 假设图床的文件名和本地一致，只是多了前缀

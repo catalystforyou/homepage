@@ -4,6 +4,10 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
 
 <div id="life-map" style="height: 600px; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; z-index: 1;"></div>
 
@@ -20,15 +24,17 @@
             .then(response => response.json())
             .then(points => {
                 
+                var markers = L.markerClusterGroup();
+
                 // 遍历数据撒点
                 points.forEach(function(point) {
-                    var marker = L.marker([point.lat, point.lng]).addTo(map);
+                    var marker = L.marker([point.lat, point.lng]);
                     
                     // 优化了一下弹窗样式，限制图片最大高度，防止撑爆屏幕
                     var popupContent = `
-                        <div style="text-align: center; min-width: 200px;">
-                            <b style="font-size: 1.1em; display:block; margin-bottom:5px;">${point.title}</b>
-                            <div style="width: 100%; max-height: 300px; overflow: hidden; border-radius: 8px;">
+                        <div style="text-align: center; min-width: 300px;">
+                            <b style="font-size: 1.2em; display:block; margin-bottom:8px;">${point.title}</b>
+                            <div style="width: 100%; max-height: 500px; overflow: hidden; border-radius: 8px;">
                                 <img src="${point.img}" style="width: 100%; height: auto; object-fit: cover;" loading="lazy">
                             </div>
                         </div>
@@ -36,19 +42,22 @@
                     
                     // 修正 Popup 宽度配置
                     marker.bindPopup(popupContent, { 
-                        maxWidth: 300,
-                        minWidth: 200
+                        maxWidth: 500,
+                        minWidth: 300
                     });
 
                     marker.on('mouseover', function (e) {
                         this.openPopup();
                     });
+
+                    markers.addLayer(marker);
                 });
+
+                map.addLayer(markers);
 
                 // (可选) 自动调整地图视野，包含所有点
                 if(points.length > 0){
-                    var group = new L.featureGroup(points.map(p => L.marker([p.lat, p.lng])));
-                    map.fitBounds(group.getBounds().pad(0.1));
+                    map.fitBounds(markers.getBounds().pad(0.1));
                 }
             })
             .catch(error => console.error('Error loading map data:', error));
