@@ -21,14 +21,14 @@ title = "Junren Li"
     weight = 30
   [[menu.main]]
     identifier = "ethanol"
-    name = "Ethanol"
-    url = "/off-duty/ethanol/"
+    name = "EtOH(1%-95%, aq)"
+    url = "/off-duty/EtOH/"
     parent = "off-duty"
     weight = 10
   [[menu.main]]
     identifier = "life-diffusion-model"
-    name = "Life Diffusion Model"
-    url = "/off-duty/life-diffusion-model/"
+    name = "The Journey is the Reward"
+    url = "/off-duty/Journey/"
     parent = "off-duty"
     weight = 20
   [[menu.main]]
