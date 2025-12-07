@@ -16,4 +16,7 @@ hideSummary: true
     .entry-cover {
         display: none !important;
     }
+    .post-title, .post-meta {
+        display: none !important;
+    }
 </style>

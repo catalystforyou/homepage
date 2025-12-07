@@ -21,7 +21,7 @@ title = "Junren Li"
     weight = 30
   [[menu.main]]
     identifier = "ethanol"
-    name = "EtOH(1%-95%, aq)"
+    name = "EtOH (1%-95%, aq)"
     url = "/off-duty/EtOH/"
     parent = "off-duty"
     weight = 10

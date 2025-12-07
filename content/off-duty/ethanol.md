@@ -1,5 +1,5 @@
 ---
-title: "Ethanol"
+title: "EtOH (1%-95%, aq)"
 date: 2025-12-05
 draft: false
 cover:
@@ -17,6 +17,7 @@ hideSummary: true
 - Finished in Wine Casks
 {{< /card >}}
 {{< /ethanol-cards >}}
+
 
 <style>
     .entry-cover {
