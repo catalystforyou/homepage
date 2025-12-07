@@ -16,29 +16,41 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // Example data points - You can replace this with a JSON file load or Hugo data iteration
-        var points = [
-            { lat: 30.587206, lng: 104.066792, title: "天府大道", img: "https://img.junren.li/DSC09527.JPG" },
-        ];
+        fetch('/data/life_points.json')
+            .then(response => response.json())
+            .then(points => {
+                
+                // 遍历数据撒点
+                points.forEach(function(point) {
+                    var marker = L.marker([point.lat, point.lng]).addTo(map);
+                    
+                    // 优化了一下弹窗样式，限制图片最大高度，防止撑爆屏幕
+                    var popupContent = `
+                        <div style="text-align: center; min-width: 200px;">
+                            <b style="font-size: 1.1em; display:block; margin-bottom:5px;">${point.title}</b>
+                            <div style="width: 100%; max-height: 300px; overflow: hidden; border-radius: 8px;">
+                                <img src="${point.img}" style="width: 100%; height: auto; object-fit: cover;" loading="lazy">
+                            </div>
+                        </div>
+                    `;
+                    
+                    // 修正 Popup 宽度配置
+                    marker.bindPopup(popupContent, { 
+                        maxWidth: 300,
+                        minWidth: 200
+                    });
 
-        points.forEach(function(point) {
-            var marker = L.marker([point.lat, point.lng]).addTo(map);
-            var popupContent = `
-                <div style="text-align: center;">
-                    <b style="font-size: 1.2em;">${point.title}</b><br>
-                    <img src="${point.img}" style="width: 100vw; height: auto; margin-top: 10px;">
-                </div>
-            `;
-            marker.bindPopup(popupContent, { maxWidth: window.innerWidth * 0.9, minWidth: window.innerWidth * 0.2 });
+                    marker.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                });
 
-            marker.on('mouseover', function (e) {
-                this.openPopup();
-            });
-            
-            // Optional: close on mouseout
-            // marker.on('mouseout', function (e) {
-            //     this.closePopup();
-            // });
-        });
+                // (可选) 自动调整地图视野，包含所有点
+                if(points.length > 0){
+                    var group = new L.featureGroup(points.map(p => L.marker([p.lat, p.lng])));
+                    map.fitBounds(group.getBounds().pad(0.1));
+                }
+            })
+            .catch(error => console.error('Error loading map data:', error));
     });
 </script>
