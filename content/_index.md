@@ -27,7 +27,7 @@ draft: false
             <li><strong>Reaction Procedure Recommendation:</strong> Predicting experimental actions to maximize yield and efficiency.</li>
         </ul>
         <p>
-            Beyond my academic studies at Peking University, my journey has been shaped by continuous engagement with world-class research labs. I have spent extensive time as a research intern within the Microsoft Research (MSR) ecosystem, collaborating with leading experts to push the boundaries of AI for Science. This includes my time at MSRA (May 2022 – Nov 2023) with Dr. Lei Fang, and MSR AI4S Asia (Mar 2025 – Sep 2025) with Dr. Guoqing Liu. Looking ahead, I will start another internship at MSR AI4S Cambridge in Jan 2026 to continue exploring the intersection of LLMs and chemistry.
+            Beyond my academic studies at Peking University, my journey has been shaped by continuous engagement with world-class research labs. I have spent extensive time as a research intern within the Microsoft Research (MSR) ecosystem, collaborating with leading experts to push the boundaries of AI for Science. This includes my time at MSRA (May 2022 – Nov 2023) and MSR AI4S Beijing (Mar 2025 – Sep 2025). I am currently an intern at MSR AI4S Cambridge (since Jan 2026), continuing to explore the intersection of LLMs and chemistry.
         </p>
         <p>
             To ensure my computational work remains grounded in physical reality, I also served as a visiting research student at the Center for Algorithmic and Roboticized Synthesis, IBS (Oct 2024 – Dec 2024). Advised by Prof. Bartosz Grzybowski, I gained valuable insights into chemical automation and catalyst development, effectively balancing my AI expertise with deep chemical domain knowledge.

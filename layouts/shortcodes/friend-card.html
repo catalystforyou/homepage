@@ -1,0 +1,19 @@
+{{- $title := .Get "title" -}}
+{{- $image := .Get "image" -}}
+{{- $url := .Get "url" -}}
+
+<a class="friend-card" href="{{ $url }}" target="_blank" rel="noopener" style="display: block; width: 280px; border: 1px solid #ccc; border-radius: 12px; padding: 14px 16px; text-decoration: none; color: inherit; box-shadow: 0 4px 6px rgba(0,0,0,0.08);">
+  <div style="display: flex; align-items: center; gap: 14px;">
+    {{ with $image }}
+      <img src="{{ . }}" alt="{{ $title }}" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex: 0 0 72px;" />
+    {{ end }}
+    <div style="min-width: 0;">
+      {{ with $title }}
+        <div style="font-size: 1.05em; font-weight: 700; line-height: 1.2; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ . }}</div>
+      {{ end }}
+      {{ with $url }}
+        <div style="font-size: 0.9em; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ . }}</div>
+      {{ end }}
+    </div>
+  </div>
+</a>
