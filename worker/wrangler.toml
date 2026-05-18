@@ -1,0 +1,14 @@
+name = "junren-match"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+
+# Custom domain match.junren.li is bound via the Cloudflare dashboard
+# (Workers & Pages → junren-match → Settings → Domains & Routes).
+
+[[d1_databases]]
+binding = "DB"
+database_name = "match-db"
+database_id = "5b4fa5b1-dddd-44b0-a9e3-74969133df87"
+
+[observability]
+enabled = true

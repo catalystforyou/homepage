@@ -32,6 +32,17 @@ title = "Junren Li"
     parent = "off-duty"
     weight = 20
   [[menu.main]]
+    identifier = "widget"
+    name = "Widget"
+    url = "/widget/"
+    weight = 40
+  [[menu.main]]
+    identifier = "match"
+    name = "Match"
+    url = "/widget/match/"
+    parent = "widget"
+    weight = 10
+  [[menu.main]]
     identifier = "misc"
     name = "Misc"
     url = "/misc/"
