@@ -5,12 +5,9 @@ draft: false
 ---
 
 <p>
-Paste a SMILES, edit the structure, export as SMILES / InChI / MOL block. Convenience tool I built so I don't have to spin up a script every time I want to eyeball a molecule.
+Paste a SMILES, edit the structure, export as SMILES / InChI / MOL block. Convenience tool for myself so I don't have to spin up a script every time I want to eyeball a molecule.
 </p>
 
-<p>
-粘贴 SMILES、编辑分子、导出为 SMILES / InChI / MOL block。给自己写的一个小工具，省得每次想可视化一个分子还得跑脚本。
-</p>
 
 <div id="mol-app">
   <div class="mol-row">

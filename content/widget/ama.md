@@ -5,11 +5,7 @@ draft: false
 ---
 
 <p>
-Ask me anything — chemistry, AI4Science, grad school, life on the road, whatever. Submissions are private until I reply publicly here. Optional email lets me reply privately when the question isn't suitable for a public answer.
-</p>
-
-<p>
-有问必（尽量）答。提问后只有我公开回复才会在下面展示。留邮箱（可选）的话，不便公开的内容我会私信回。
+Ask me anything — chemistry, AI4Science, life on the road, whatever. Submissions are private until I reply publicly here. Optional email lets me reply privately when the question is not very...suitable for a public answer.
 </p>
 
 <div id="ama-app">
