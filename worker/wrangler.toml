@@ -7,7 +7,7 @@ compatibility_date = "2025-05-01"
 
 [vars]
 NOTIFY_EMAIL = "catalystforyou@outlook.com"
-FROM_EMAIL = "AMA <ama@junren.li>"
+FROM_EMAIL = "Junren AMA <onboarding@resend.dev>"
 PUBLIC_BASE = "https://match.junren.li"
 
 [[d1_databases]]

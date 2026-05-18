@@ -284,11 +284,14 @@ async function handleAmaSubmit(req: Request, env: Env, origin: string | null): P
     question,
     "",
     "—",
-    "To answer publicly:",
+    "To answer publicly (will appear on /widget/ama/):",
     adminCurl,
     "",
-    'To answer privately by email (uses "mode":"private"), the asker must have left an email.',
-    'To delete: same endpoint with mode:"hide".',
+    email
+      ? "To reply privately: just hit Reply in your mail client — Reply-To is set to the asker's email."
+      : "(Asker did not leave an email, so private reply isn't possible.)",
+    "",
+    'To delete the question: same endpoint, body {"key":"...","id":' + id + ',"mode":"hide"}.',
   ].join("\n");
 
   await sendEmail(env, {
@@ -349,7 +352,7 @@ async function handleAmaAnswer(req: Request, env: Env, origin: string | null): P
   if (!Number.isInteger(id) || id <= 0) {
     return jsonResponse({ error: "invalid_id" }, 400, origin);
   }
-  const mode = b?.mode === "private" ? "private" : (b?.mode === "hide" ? "hide" : "public");
+  const mode = b?.mode === "hide" ? "hide" : "public";
 
   if (mode === "hide") {
     const res = await env.DB.prepare(
@@ -364,42 +367,14 @@ async function handleAmaAnswer(req: Request, env: Env, origin: string | null): P
   const answer = cleanText(b?.answer, MAX_ANSWER_LEN);
   if (!answer) return jsonResponse({ error: "invalid_answer" }, 400, origin);
 
-  const existing = await env.DB.prepare(
-    "SELECT id, question, name, email FROM ama_questions WHERE id = ?1"
-  ).bind(id).first<{ id: number; question: string; name: string | null; email: string | null }>();
-  if (!existing) return jsonResponse({ error: "not_found" }, 404, origin);
-
-  const now = Date.now();
-  const newStatus = mode === "private" ? "private" : "answered";
-
-  await env.DB.prepare(
-    "UPDATE ama_questions SET answer = ?1, answered_at = ?2, status = ?3 WHERE id = ?4"
-  ).bind(answer, now, newStatus, id).run();
-
-  let emailSent: { ok: boolean; error?: string } | null = null;
-  if (mode === "private") {
-    if (!existing.email) {
-      return jsonResponse({ error: "no_email_on_question" }, 400, origin);
-    }
-    const text = [
-      `Hi${existing.name ? " " + existing.name : ""},`,
-      "",
-      "Thanks for your question on junren.li. Here's my reply:",
-      "",
-      "> " + existing.question.split("\n").join("\n> "),
-      "",
-      answer,
-      "",
-      "— Junren",
-    ].join("\n");
-    emailSent = await sendEmail(env, {
-      to: existing.email,
-      subject: "Re: your question to Junren",
-      text,
-    });
+  const res = await env.DB.prepare(
+    "UPDATE ama_questions SET answer = ?1, answered_at = ?2, status = 'answered' WHERE id = ?3"
+  ).bind(answer, Date.now(), id).run();
+  if ((res.meta.changes ?? 0) === 0) {
+    return jsonResponse({ error: "not_found" }, 404, origin);
   }
 
-  return jsonResponse({ ok: true, action: newStatus, email: emailSent }, 200, origin);
+  return jsonResponse({ ok: true, action: "answered" }, 200, origin);
 }
 
 // ─────────────────────────────────────────────────────────
