@@ -11,3 +11,17 @@ CREATE TABLE IF NOT EXISTS submissions (
 
 CREATE INDEX IF NOT EXISTS idx_my   ON submissions(my_id_norm);
 CREATE INDEX IF NOT EXISTS idx_pair ON submissions(my_id_norm, target_id_norm);
+
+CREATE TABLE IF NOT EXISTS ama_questions (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  question     TEXT    NOT NULL,
+  name         TEXT,
+  email        TEXT,
+  created_at   INTEGER NOT NULL,
+  status       TEXT    NOT NULL DEFAULT 'pending',
+  answer       TEXT,
+  answered_at  INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_ama_status ON ama_questions(status, answered_at DESC);
+CREATE INDEX IF NOT EXISTS idx_ama_created ON ama_questions(created_at DESC);

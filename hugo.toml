@@ -43,6 +43,18 @@ title = "Junren Li"
     parent = "widget"
     weight = 10
   [[menu.main]]
+    identifier = "ama"
+    name = "AMA"
+    url = "/widget/ama/"
+    parent = "widget"
+    weight = 20
+  [[menu.main]]
+    identifier = "molsketch"
+    name = "MolSketch"
+    url = "/widget/molsketch/"
+    parent = "widget"
+    weight = 30
+  [[menu.main]]
     identifier = "misc"
     name = "Misc"
     url = "/misc/"

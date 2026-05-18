@@ -5,6 +5,11 @@ compatibility_date = "2025-05-01"
 # Custom domain match.junren.li is bound via the Cloudflare dashboard
 # (Workers & Pages → junren-match → Settings → Domains & Routes).
 
+[vars]
+NOTIFY_EMAIL = "catalystforyou@outlook.com"
+FROM_EMAIL = "AMA <ama@junren.li>"
+PUBLIC_BASE = "https://match.junren.li"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "match-db"
