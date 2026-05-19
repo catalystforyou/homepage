@@ -28,7 +28,7 @@ title = "Junren Li"
   [[menu.main]]
     identifier = "life-diffusion-model"
     name = "The Journey is the Reward"
-    url = "/off-duty/Journey/"
+    url = "/off-duty/life-diffusion-model/"
     parent = "off-duty"
     weight = 20
   [[menu.main]]

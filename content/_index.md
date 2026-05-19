@@ -4,43 +4,63 @@ date: 2025-12-05
 draft: false
 ---
 
-<a href="/off-duty/Journey/" class="geoguess-hint" title="A geoguess-style game using my travel photos">
-    🎯 <em>geoguess inside</em> →
-</a>
-
 <style>
 .geoguess-hint {
-    position: fixed;
-    bottom: 1.4em;
-    right: 1.4em;
-    z-index: 999;
-    padding: 0.55em 0.95em;
-    background: rgba(0, 0, 0, 0.06);
-    color: var(--primary, #1a1a1a) !important;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 6px;
+    padding: 0.25em 0.7em;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--secondary, #888) !important;
     text-decoration: none;
     border-radius: 999px;
-    font-size: 0.85em;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: transform 0.18s ease, background 0.18s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    font-size: 0.68em;
+    font-weight: normal;
+    letter-spacing: 0;
+    white-space: nowrap;
+    transition: background 0.18s ease, color 0.18s ease;
 }
 .geoguess-hint:hover {
-    transform: translateY(-2px);
     background: rgba(0, 0, 0, 0.1);
+    color: var(--primary, #1a1a1a) !important;
 }
 .geoguess-hint em { font-style: italic; }
 @media (prefers-color-scheme: dark) {
-    .geoguess-hint {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--primary) !important;
-    }
+    .geoguess-hint { background: rgba(255, 255, 255, 0.07); }
     .geoguess-hint:hover { background: rgba(255, 255, 255, 0.14); }
 }
-@media (max-width: 480px) {
-    .geoguess-hint { bottom: 0.8em; right: 0.8em; font-size: 0.78em; padding: 0.45em 0.8em; }
-}
 </style>
+
+<script>
+(function () {
+    function placeHint() {
+        var menu = document.getElementById('menu');
+        if (!menu) return;
+        var items = menu.querySelectorAll('li');
+        for (var i = 0; i < items.length; i++) {
+            var txt = items[i].textContent.trim().toLowerCase();
+            if (txt === 'off-duty' || txt.indexOf('off-duty') === 0) {
+                if (items[i].querySelector('.geoguess-hint')) return;
+                items[i].style.position = 'relative';
+                var a = document.createElement('a');
+                a.className = 'geoguess-hint';
+                a.href = '/off-duty/life-diffusion-model/';
+                a.title = 'A geoguess game inside my travel-photo map';
+                a.innerHTML = '🎯 <em>geoguess inside</em>';
+                items[i].appendChild(a);
+                return;
+            }
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', placeHint);
+    } else {
+        placeHint();
+    }
+})();
+</script>
 
 <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
     <div style="flex: 0 0 300px; max-width: 100%;">
