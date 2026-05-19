@@ -33,6 +33,7 @@
         </div>
         <div class="geo-actions">
             <button id="geo-skip" type="button" class="geo-secondary">Skip</button>
+            <button id="geo-confirm" type="button" style="display: none;">Confirm guess</button>
             <button id="geo-next" type="button" style="display: none;">Next round →</button>
         </div>
         <div id="geo-result" class="geo-result" style="display: none;"></div>
@@ -428,8 +429,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('geo-result').style.display = 'none';
         document.getElementById('geo-result').innerHTML = '';
         document.getElementById('geo-next').style.display = 'none';
+        document.getElementById('geo-confirm').style.display = 'none';
         document.getElementById('geo-skip').disabled = false;
         document.getElementById('geo-instructions').textContent = 'Click anywhere on the map to place your guess.';
+        game.pendingGuess = null;
         var img = document.getElementById('geo-photo');
         // Hide the previous photo immediately so we don't flash it while loading the next one.
         img.classList.remove('is-empty');
@@ -444,15 +447,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function revealRound(guessLatLng) {
-        if (!game || game.state !== 'guessing') return;
+        if (!game || (game.state !== 'guessing' && game.state !== 'placed')) return;
         var photo = game.currentPhoto;
         var truthLL = { lat: photo.lat, lng: photo.lng };
         var score, distanceKm;
         if (guessLatLng) {
             distanceKm = haversineKm(guessLatLng, truthLL);
             score = scoreFromDistance(distanceKm);
-            guessMarker = L.marker([guessLatLng.lat, guessLatLng.lng], { icon: pinIcon('guess') })
-                          .bindTooltip('Your guess', {permanent: false}).addTo(map);
+            // Reuse the marker that was placed during the 'placed' phase, or create one for skip-with-guess edge cases.
+            if (!guessMarker) {
+                guessMarker = L.marker([guessLatLng.lat, guessLatLng.lng], { icon: pinIcon('guess') })
+                              .bindTooltip('Your guess', {permanent: false}).addTo(map);
+            }
         } else {
             distanceKm = NaN;
             score = 0;
@@ -481,6 +487,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('geo-instructions').textContent =
             game.round < ROUNDS ? 'Red = actual, green = your guess.' : 'Final round complete.';
         document.getElementById('geo-skip').disabled = true;
+        document.getElementById('geo-confirm').style.display = 'none';
         var nextBtn = document.getElementById('geo-next');
         nextBtn.style.display = '';
         nextBtn.textContent = (game.round < ROUNDS ? 'Next round →' : 'See results →');
@@ -547,8 +554,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ── Map click handler ────────────────────────────────
     map.on('click', function (e) {
-        if (!game || game.state !== 'guessing') return;
-        revealRound(e.latlng);
+        if (!game) return;
+        if (game.state !== 'guessing' && game.state !== 'placed') return;
+        // Place or move the guess pin; commit only on Confirm.
+        if (guessMarker) {
+            guessMarker.setLatLng(e.latlng);
+        } else {
+            guessMarker = L.marker(e.latlng, { icon: pinIcon('guess') })
+                          .bindTooltip('Your guess').addTo(map);
+        }
+        game.pendingGuess = e.latlng;
+        game.state = 'placed';
+        document.getElementById('geo-confirm').style.display = '';
+        document.getElementById('geo-instructions').textContent = 'Click again to move the pin, or hit Confirm.';
     });
 
     // ── Buttons ──────────────────────────────────────────
@@ -556,8 +574,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('lm-mode-guess').addEventListener('click', () => setMode('guess'));
 
     document.getElementById('geo-skip').addEventListener('click', () => {
-        if (!game || game.state !== 'guessing') return;
+        if (!game || (game.state !== 'guessing' && game.state !== 'placed')) return;
         revealRound(null);
+    });
+    document.getElementById('geo-confirm').addEventListener('click', () => {
+        if (!game || game.state !== 'placed' || !game.pendingGuess) return;
+        revealRound(game.pendingGuess);
     });
     document.getElementById('geo-next').addEventListener('click', () => {
         if (!game || game.state !== 'revealed') return;
