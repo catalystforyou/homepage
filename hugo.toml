@@ -55,6 +55,12 @@ title = "Junren Li"
     parent = "widget"
     weight = 30
   [[menu.main]]
+    identifier = "fluid"
+    name = "Fluid"
+    url = "/widget/fluid/"
+    parent = "widget"
+    weight = 40
+  [[menu.main]]
     identifier = "misc"
     name = "Misc"
     url = "/misc/"
