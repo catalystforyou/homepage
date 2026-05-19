@@ -1,6 +1,7 @@
 ---
 title: "EtOH (1%-95%, aq)"
 date: 2025-12-05
+weight: 2
 draft: false
 cover:
     image: "https://img.junren.li/whiskey_flow.jpg"

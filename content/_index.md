@@ -4,6 +4,44 @@ date: 2025-12-05
 draft: false
 ---
 
+<a href="/off-duty/Journey/" class="geoguess-hint" title="A geoguess-style game using my travel photos">
+    🎯 <em>geoguess inside</em> →
+</a>
+
+<style>
+.geoguess-hint {
+    position: fixed;
+    bottom: 1.4em;
+    right: 1.4em;
+    z-index: 999;
+    padding: 0.55em 0.95em;
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--primary, #1a1a1a) !important;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 0.85em;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.18s ease, background 0.18s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.geoguess-hint:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 0, 0, 0.1);
+}
+.geoguess-hint em { font-style: italic; }
+@media (prefers-color-scheme: dark) {
+    .geoguess-hint {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--primary) !important;
+    }
+    .geoguess-hint:hover { background: rgba(255, 255, 255, 0.14); }
+}
+@media (max-width: 480px) {
+    .geoguess-hint { bottom: 0.8em; right: 0.8em; font-size: 0.78em; padding: 0.45em 0.8em; }
+}
+</style>
+
 <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
     <div style="flex: 0 0 300px; max-width: 100%;">
         <img src="https://img.junren.li/Lindau_talk.jpg" alt="Junren Li at Lindau" style="width: 100%; height: auto; border-radius: 8px;">

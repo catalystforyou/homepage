@@ -1,6 +1,7 @@
 ---
 title: "The Journey is the Reward"
 date: 2025-12-05
+weight: 1
 draft: false
 cover:
     image: "https://img.junren.li/wondering_earth.jpg"

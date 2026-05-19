@@ -14,57 +14,554 @@
     <div style="font-size: 0.6em; font-style: normal; margin-top: 5px; opacity: 0.8;">— Steve Jobs</div>
 </div>
 
-<div id="life-map" style="height: 600px; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; z-index: 1;"></div>
+<div class="lm-modes">
+    <button id="lm-mode-browse" type="button" class="lm-mode lm-mode-active">📍 Browse photos</button>
+    <button id="lm-mode-guess" type="button" class="lm-mode">🎯 Guess where</button>
+    <span class="lm-hint" id="lm-hint">Pick a mode</span>
+</div>
+
+<div class="lm-wrap">
+    <div id="life-map"></div>
+
+    <div id="geo-panel" class="geo-panel" style="display: none;">
+        <div class="geo-photo-wrap">
+            <img id="geo-photo" alt="Where was this taken?" referrerpolicy="no-referrer">
+        </div>
+        <div class="geo-info">
+            <span><strong id="geo-round-label">Round 1 / 5</strong></span>
+            <span class="geo-score-label">Total: <strong id="geo-total-score">0</strong> pts</span>
+        </div>
+        <div class="geo-actions">
+            <button id="geo-skip" type="button" class="geo-secondary">Skip</button>
+            <button id="geo-next" type="button" style="display: none;">Next round →</button>
+        </div>
+        <div id="geo-result" class="geo-result" style="display: none;"></div>
+        <p class="geo-instructions" id="geo-instructions">Click anywhere on the map to place your guess.</p>
+    </div>
+
+    <div id="geo-end" class="geo-end" style="display: none;">
+        <div class="geo-end-card">
+            <h3>Game over</h3>
+            <p>Total score: <strong id="geo-final-score">0</strong> / 25,000</p>
+            <p class="geo-final-breakdown" id="geo-final-breakdown"></p>
+            <div class="geo-end-row">
+                <input id="geo-name" type="text" maxlength="20" placeholder="Your name for the leaderboard" autocomplete="off">
+                <button id="geo-save" type="button">Save</button>
+            </div>
+            <p class="geo-save-status" id="geo-save-status"></p>
+            <div class="geo-leaderboard">
+                <h4>Local leaderboard <span class="geo-lb-hint">(stays on this device)</span></h4>
+                <ol id="geo-lb-list"></ol>
+            </div>
+            <div class="geo-end-actions">
+                <button id="geo-restart" type="button">Play again</button>
+                <button id="geo-quit" type="button" class="geo-secondary">Back to browse</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .lm-modes {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.6em;
+        flex-wrap: wrap;
+        margin: 0 0 12px 0;
+        padding: 0 12px;
+    }
+    .lm-mode {
+        padding: 0.45em 1em;
+        background: transparent;
+        color: var(--primary, #1a1a1a);
+        border: 1px solid var(--border, #d0d0d0);
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-family: inherit;
+    }
+    .lm-mode:hover { background: rgba(0,0,0,0.04); }
+    .lm-mode-active {
+        background: var(--primary, #1a1a1a);
+        color: var(--theme, #fff);
+        border-color: var(--primary, #1a1a1a);
+    }
+    .lm-mode-active:hover { background: var(--primary, #1a1a1a); }
+    .lm-hint {
+        font-size: 0.85em;
+        color: var(--secondary, #888);
+        margin-left: 0.4em;
+    }
+    @media (prefers-color-scheme: dark) {
+        .lm-mode:hover { background: rgba(255,255,255,0.06); }
+    }
+
+    .lm-wrap {
+        position: relative;
+        width: 100vw;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        z-index: 1;
+    }
+    #life-map {
+        height: 600px;
+        width: 100%;
+    }
+    @media (max-width: 700px) {
+        #life-map { height: 480px; }
+    }
+
+    /* Geoguess overlay panel */
+    .geo-panel {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 320px;
+        max-width: calc(100vw - 24px);
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+        z-index: 1000;
+        font-family: inherit;
+        color: #1a1a1a;
+    }
+    .geo-photo-wrap {
+        width: 100%;
+        height: 200px;
+        background: #f0f0f0;
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    .geo-photo-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .geo-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+    .geo-actions {
+        display: flex;
+        gap: 0.5em;
+        margin-bottom: 8px;
+    }
+    .geo-panel button {
+        flex: 1;
+        padding: 0.5em 0.9em;
+        background: var(--primary, #1a1a1a);
+        color: #fff;
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-family: inherit;
+    }
+    .geo-panel button.geo-secondary {
+        background: transparent;
+        color: #555;
+        border: 1px solid #ccc;
+    }
+    .geo-panel button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .geo-result {
+        font-size: 0.9em;
+        background: #e8f5e9;
+        color: #1b5e20;
+        padding: 0.6em 0.8em;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+    .geo-instructions {
+        font-size: 0.8em;
+        color: #888;
+        margin: 0;
+        text-align: center;
+    }
+    @media (max-width: 520px) {
+        .geo-panel { width: calc(100vw - 24px); }
+        .geo-photo-wrap { height: 160px; }
+    }
+
+    /* End-of-game card */
+    .geo-end {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        z-index: 1100;
+    }
+    .geo-end[style*="display: none"] { display: none !important; }
+    .geo-end-card {
+        width: 440px;
+        max-width: calc(100vw - 24px);
+        max-height: calc(100% - 24px);
+        overflow-y: auto;
+        background: #fff;
+        color: #1a1a1a;
+        border-radius: 10px;
+        padding: 20px;
+        font-family: inherit;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .geo-end-card h3 { margin: 0 0 10px; font-size: 1.4em; }
+    .geo-end-card h4 { margin: 1em 0 0.4em; font-size: 1em; }
+    .geo-end-card p { margin: 0.4em 0; font-size: 0.95em; }
+    .geo-final-breakdown {
+        font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+        font-size: 0.85em !important;
+        color: #555;
+        line-height: 1.5;
+        white-space: pre-wrap;
+    }
+    .geo-end-row {
+        display: flex;
+        gap: 0.5em;
+        margin: 0.8em 0 0.4em;
+    }
+    .geo-end-row input {
+        flex: 1;
+        padding: 0.5em 0.7em;
+        font-size: 0.95em;
+        border: 1px solid #d0d0d0;
+        border-radius: 4px;
+        font-family: inherit;
+    }
+    .geo-end-row button, .geo-end-actions button {
+        padding: 0.5em 1em;
+        background: var(--primary, #1a1a1a);
+        color: #fff;
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-family: inherit;
+    }
+    .geo-end-actions {
+        display: flex;
+        gap: 0.5em;
+        margin-top: 1em;
+    }
+    .geo-end-actions button.geo-secondary {
+        background: transparent;
+        color: #555;
+        border: 1px solid #ccc;
+        flex: 1;
+    }
+    .geo-save-status {
+        font-size: 0.85em !important;
+        color: #1b5e20;
+        min-height: 1em;
+        margin: 0.2em 0 0 !important;
+    }
+    .geo-leaderboard ol {
+        margin: 0;
+        padding-left: 1.4em;
+        font-size: 0.9em;
+        max-height: 180px;
+        overflow-y: auto;
+    }
+    .geo-leaderboard li { margin: 0.15em 0; }
+    .geo-leaderboard .geo-lb-self { background: #fff3cd; }
+    .geo-lb-hint { font-size: 0.7em; color: #888; font-weight: normal; }
+    .geo-lb-empty { color: #888; font-size: 0.9em; }
+
+    /* True/guess pins styling */
+    .geo-pin {
+        background: transparent;
+        border: 0;
+    }
+    .geo-pin-dot {
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
+    }
+    .geo-pin-truth .geo-pin-dot { background: #d32f2f; }
+    .geo-pin-guess .geo-pin-dot { background: #2e7d32; }
+</style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var map = L.map('life-map').setView([39.9042, 116.4074], 4); // Default view (e.g., Beijing)
+document.addEventListener("DOMContentLoaded", function() {
+    // ── Map setup (browse mode) ───────────────────────────
+    var map = L.map('life-map').setView([30, 30], 2);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+    var allPoints = [];
+    var browseCluster = null;
+    var dataReady = false;
+    var hintEl = document.getElementById('lm-hint');
+    hintEl.textContent = 'Loading photos…';
 
-        fetch('/data/life_points.json')
-            .then(response => response.json())
-            .then(points => {
-                
-                var markers = L.markerClusterGroup();
+    fetch('/data/life_points.json')
+        .then(r => r.json())
+        .then(points => {
+            allPoints = points;
+            browseCluster = L.markerClusterGroup();
+            points.forEach(point => {
+                var marker = L.marker([point.lat, point.lng]);
+                var popupContent =
+                    '<div style="text-align: center; min-width: 300px;">' +
+                        '<b style="font-size: 1.2em; display:block; margin-bottom:8px;">' + point.title + '</b>' +
+                        '<div style="width: 100%; max-height: 500px; overflow: hidden; border-radius: 8px;">' +
+                            '<img src="' + point.img + '" style="width: 100%; height: auto; object-fit: cover;" loading="lazy">' +
+                        '</div>' +
+                    '</div>';
+                marker.bindPopup(popupContent, { maxWidth: 500, minWidth: 300 });
+                marker.on('mouseover', function () { this.openPopup(); });
+                browseCluster.addLayer(marker);
+            });
+            map.addLayer(browseCluster);
+            if (points.length > 0) map.fitBounds(browseCluster.getBounds().pad(0.1));
+            dataReady = true;
+            hintEl.textContent = points.length + ' photos · pick a mode';
+        })
+        .catch(err => {
+            console.error('Error loading map data:', err);
+            hintEl.textContent = 'Failed to load photos.';
+        });
 
-                // 遍历数据撒点
-                points.forEach(function(point) {
-                    var marker = L.marker([point.lat, point.lng]);
-                    
-                    // 优化了一下弹窗样式，限制图片最大高度，防止撑爆屏幕
-                    var popupContent = `
-                        <div style="text-align: center; min-width: 300px;">
-                            <b style="font-size: 1.2em; display:block; margin-bottom:8px;">${point.title}</b>
-                            <div style="width: 100%; max-height: 500px; overflow: hidden; border-radius: 8px;">
-                                <img src="${point.img}" style="width: 100%; height: auto; object-fit: cover;" loading="lazy">
-                            </div>
-                        </div>
-                    `;
-                    
-                    // 修正 Popup 宽度配置
-                    marker.bindPopup(popupContent, { 
-                        maxWidth: 500,
-                        minWidth: 300
-                    });
+    // ── Geoguess state ────────────────────────────────────
+    var ROUNDS = 5;
+    var EARTH_RADIUS_KM = 6371;
+    var SCORE_SCALE_KM = 2000;   // exp(-d/2000) → 5000 max
+    var LB_KEY = 'junren_geoguess_lb_v1';
 
-                    marker.on('mouseover', function (e) {
-                        this.openPopup();
-                    });
+    var game = null;             // { round, scores: [], history: [{photo, guess, distanceKm, score}], state: 'guessing'|'revealed' }
+    var truthMarker = null;
+    var guessMarker = null;
+    var connector = null;
+    var lastSavedIdx = -1;       // for highlighting in leaderboard
 
-                    markers.addLayer(marker);
-                });
+    function haversineKm(a, b) {
+        const toRad = (x) => x * Math.PI / 180;
+        const dLat = toRad(b.lat - a.lat);
+        const dLng = toRad(b.lng - a.lng);
+        const lat1 = toRad(a.lat), lat2 = toRad(b.lat);
+        const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
+        return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
+    }
 
-                map.addLayer(markers);
+    function scoreFromDistance(d) {
+        return Math.round(5000 * Math.exp(-d / SCORE_SCALE_KM));
+    }
 
-                // (可选) 自动调整地图视野，包含所有点
-                if(points.length > 0){
-                    map.fitBounds(markers.getBounds().pad(0.1));
-                }
-            })
-            .catch(error => console.error('Error loading map data:', error));
+    function pinIcon(kind) {
+        return L.divIcon({
+            className: 'geo-pin geo-pin-' + kind,
+            html: '<div class="geo-pin-dot"></div>',
+            iconSize: [18, 18],
+            iconAnchor: [9, 9],
+        });
+    }
+
+    function clearRoundMarkers() {
+        if (truthMarker) { map.removeLayer(truthMarker); truthMarker = null; }
+        if (guessMarker) { map.removeLayer(guessMarker); guessMarker = null; }
+        if (connector)   { map.removeLayer(connector);   connector = null; }
+    }
+
+    function getPanel() { return document.getElementById('geo-panel'); }
+    function getEnd()   { return document.getElementById('geo-end'); }
+
+    function setMode(m) {
+        if (m === 'browse') {
+            document.getElementById('lm-mode-browse').classList.add('lm-mode-active');
+            document.getElementById('lm-mode-guess').classList.remove('lm-mode-active');
+            if (browseCluster && !map.hasLayer(browseCluster)) map.addLayer(browseCluster);
+            clearRoundMarkers();
+            getPanel().style.display = 'none';
+            getEnd().style.display = 'none';
+            game = null;
+            if (dataReady) hintEl.textContent = allPoints.length + ' photos · drag, zoom, click pins';
+        } else {
+            if (!dataReady) { hintEl.textContent = 'Still loading…'; return; }
+            document.getElementById('lm-mode-guess').classList.add('lm-mode-active');
+            document.getElementById('lm-mode-browse').classList.remove('lm-mode-active');
+            if (browseCluster && map.hasLayer(browseCluster)) map.removeLayer(browseCluster);
+            startGame();
+        }
+    }
+
+    function startGame() {
+        game = { round: 0, history: [], state: 'guessing' };
+        getEnd().style.display = 'none';
+        getPanel().style.display = 'block';
+        nextPhoto();
+    }
+
+    function pickRandomPhoto() {
+        return allPoints[Math.floor(Math.random() * allPoints.length)];
+    }
+
+    function nextPhoto() {
+        clearRoundMarkers();
+        game.round += 1;
+        game.state = 'guessing';
+        var photo = pickRandomPhoto();
+        game.currentPhoto = photo;
+
+        document.getElementById('geo-round-label').textContent = 'Round ' + game.round + ' / ' + ROUNDS;
+        document.getElementById('geo-total-score').textContent =
+            game.history.reduce((s, h) => s + h.score, 0).toLocaleString();
+        document.getElementById('geo-result').style.display = 'none';
+        document.getElementById('geo-result').innerHTML = '';
+        document.getElementById('geo-next').style.display = 'none';
+        document.getElementById('geo-skip').disabled = false;
+        document.getElementById('geo-instructions').textContent = 'Click anywhere on the map to place your guess.';
+        var img = document.getElementById('geo-photo');
+        img.src = photo.img;
+        img.alt = 'Round ' + game.round + ' photo';
+
+        // Reset map to neutral world view
+        map.setView([20, 20], 1);
+    }
+
+    function revealRound(guessLatLng) {
+        if (!game || game.state !== 'guessing') return;
+        var photo = game.currentPhoto;
+        var truthLL = { lat: photo.lat, lng: photo.lng };
+        var score, distanceKm;
+        if (guessLatLng) {
+            distanceKm = haversineKm(guessLatLng, truthLL);
+            score = scoreFromDistance(distanceKm);
+            guessMarker = L.marker([guessLatLng.lat, guessLatLng.lng], { icon: pinIcon('guess') })
+                          .bindTooltip('Your guess', {permanent: false}).addTo(map);
+        } else {
+            distanceKm = NaN;
+            score = 0;
+        }
+        truthMarker = L.marker([truthLL.lat, truthLL.lng], { icon: pinIcon('truth') })
+                      .bindTooltip(photo.title || 'Actual location').addTo(map);
+        if (guessLatLng) {
+            connector = L.polyline([[guessLatLng.lat, guessLatLng.lng], [truthLL.lat, truthLL.lng]], {
+                color: '#666', weight: 2, dashArray: '4 6', interactive: false,
+            }).addTo(map);
+            map.fitBounds(connector.getBounds().pad(0.3));
+        } else {
+            map.setView([truthLL.lat, truthLL.lng], 4);
+        }
+
+        game.history.push({ photo: photo, guess: guessLatLng, distanceKm: distanceKm, score: score });
+        game.state = 'revealed';
+
+        var distStr = isFinite(distanceKm)
+            ? (distanceKm < 10 ? distanceKm.toFixed(2) : distanceKm < 1000 ? distanceKm.toFixed(0) : Math.round(distanceKm).toLocaleString())
+            : '—';
+        var resEl = document.getElementById('geo-result');
+        resEl.style.display = 'block';
+        resEl.innerHTML =
+            (guessLatLng ? '<strong>' + score.toLocaleString() + ' pts</strong> · ' + distStr + ' km off' : '<strong>Skipped</strong> · 0 pts');
+        document.getElementById('geo-instructions').textContent =
+            game.round < ROUNDS ? 'Red = actual, green = your guess.' : 'Final round complete.';
+        document.getElementById('geo-skip').disabled = true;
+        var nextBtn = document.getElementById('geo-next');
+        nextBtn.style.display = '';
+        nextBtn.textContent = (game.round < ROUNDS ? 'Next round →' : 'See results →');
+        document.getElementById('geo-total-score').textContent =
+            game.history.reduce((s, h) => s + h.score, 0).toLocaleString();
+    }
+
+    function endGame() {
+        var total = game.history.reduce((s, h) => s + h.score, 0);
+        document.getElementById('geo-final-score').textContent = total.toLocaleString();
+        var bd = game.history.map((h, i) => {
+            var d = isFinite(h.distanceKm) ? (h.distanceKm < 1000 ? h.distanceKm.toFixed(0) : Math.round(h.distanceKm).toLocaleString()) + ' km' : 'skipped';
+            return 'Round ' + (i+1) + ': ' + String(h.score).padStart(5, ' ') + ' pts · ' + d;
+        }).join('\n');
+        document.getElementById('geo-final-breakdown').textContent = bd;
+        document.getElementById('geo-name').value = '';
+        document.getElementById('geo-save-status').textContent = '';
+        lastSavedIdx = -1;
+        renderLeaderboard(total);
+        getEnd().style.display = 'flex';
+    }
+
+    // ── Leaderboard (localStorage) ────────────────────────
+    function loadLeaderboard() {
+        try {
+            var v = JSON.parse(localStorage.getItem(LB_KEY) || '[]');
+            return Array.isArray(v) ? v : [];
+        } catch (_) { return []; }
+    }
+    function saveLeaderboard(lb) {
+        try { localStorage.setItem(LB_KEY, JSON.stringify(lb)); } catch (_) {}
+    }
+    function renderLeaderboard(currentScore) {
+        var lb = loadLeaderboard();
+        var listEl = document.getElementById('geo-lb-list');
+        if (lb.length === 0) {
+            listEl.innerHTML = '<li class="geo-lb-empty">No saved scores yet.</li>';
+            return;
+        }
+        listEl.innerHTML = lb.map((e, i) => {
+            var cls = (i === lastSavedIdx) ? ' class="geo-lb-self"' : '';
+            return '<li' + cls + '>' + escapeHtml(e.name) + ' — ' + Number(e.score).toLocaleString() + ' pts <span style="color:#aaa; font-size:0.8em;">' + e.date + '</span></li>';
+        }).join('');
+    }
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, (c) => ({
+            '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+        }[c]));
+    }
+
+    // ── Map click handler ────────────────────────────────
+    map.on('click', function (e) {
+        if (!game || game.state !== 'guessing') return;
+        revealRound(e.latlng);
     });
+
+    // ── Buttons ──────────────────────────────────────────
+    document.getElementById('lm-mode-browse').addEventListener('click', () => setMode('browse'));
+    document.getElementById('lm-mode-guess').addEventListener('click', () => setMode('guess'));
+
+    document.getElementById('geo-skip').addEventListener('click', () => {
+        if (!game || game.state !== 'guessing') return;
+        revealRound(null);
+    });
+    document.getElementById('geo-next').addEventListener('click', () => {
+        if (!game || game.state !== 'revealed') return;
+        if (game.round < ROUNDS) nextPhoto();
+        else endGame();
+    });
+    document.getElementById('geo-save').addEventListener('click', () => {
+        var nm = document.getElementById('geo-name').value.trim().slice(0, 20);
+        if (!nm) { document.getElementById('geo-save-status').textContent = 'Enter a name first.'; return; }
+        var total = game.history.reduce((s, h) => s + h.score, 0);
+        var lb = loadLeaderboard();
+        var entry = { name: nm, score: total, date: new Date().toISOString().slice(0, 10) };
+        lb.push(entry);
+        lb.sort((a, b) => b.score - a.score);
+        if (lb.length > 50) lb = lb.slice(0, 50);
+        saveLeaderboard(lb);
+        lastSavedIdx = lb.indexOf(entry);
+        document.getElementById('geo-save-status').textContent = 'Saved.';
+        document.getElementById('geo-save').disabled = true;
+        renderLeaderboard(total);
+    });
+    document.getElementById('geo-restart').addEventListener('click', () => {
+        document.getElementById('geo-save').disabled = false;
+        startGame();
+    });
+    document.getElementById('geo-quit').addEventListener('click', () => {
+        document.getElementById('geo-save').disabled = false;
+        setMode('browse');
+    });
+});
 </script>
