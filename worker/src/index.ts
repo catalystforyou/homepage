@@ -1,3 +1,5 @@
+import * as OCL from "openchemlib";
+
 interface Env {
   DB: D1Database;
   ADMIN_KEY: string;
@@ -378,6 +380,65 @@ async function handleAmaAnswer(req: Request, env: Env, origin: string | null): P
 }
 
 // ─────────────────────────────────────────────────────────
+// SMILES → SVG (public embed endpoint)
+// ─────────────────────────────────────────────────────────
+
+const MAX_SMILES_LEN = 500;
+const MIN_SVG_DIM = 50;
+const MAX_SVG_DIM = 1200;
+
+function placeholderSvg(w: number, h: number, msg: string): Response {
+  const text = escapeHtml(msg).slice(0, 60);
+  const body =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+    `<rect width="100%" height="100%" fill="#fafafa" stroke="#ddd"/>` +
+    `<text x="50%" y="50%" font-family="sans-serif" font-size="14" fill="#999" text-anchor="middle" dominant-baseline="middle">${text}</text>` +
+    `</svg>`;
+  return new Response(body, {
+    status: 400,
+    headers: {
+      "Content-Type": "image/svg+xml; charset=utf-8",
+      "Cache-Control": "public, max-age=300",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+function clampDim(raw: string | null, fallback: number): number {
+  const n = parseInt(raw || "", 10);
+  if (!isFinite(n)) return fallback;
+  return Math.min(Math.max(n, MIN_SVG_DIM), MAX_SVG_DIM);
+}
+
+async function handleMolSvg(url: URL): Promise<Response> {
+  const smiles = (url.searchParams.get("smiles") || "").trim();
+  if (!smiles) return placeholderSvg(300, 200, "no smiles");
+  if (smiles.length > MAX_SMILES_LEN) return placeholderSvg(300, 200, "smiles too long");
+
+  const w = clampDim(url.searchParams.get("w"), 400);
+  const h = clampDim(url.searchParams.get("h"), 300);
+
+  let svg: string;
+  try {
+    const mol = OCL.Molecule.fromSmiles(smiles);
+    if (!mol || mol.getAllAtoms() === 0) return placeholderSvg(w, h, "empty molecule");
+    svg = mol.toSVG(w, h);
+  } catch (e) {
+    return placeholderSvg(w, h, "invalid SMILES");
+  }
+
+  return new Response(svg, {
+    status: 200,
+    headers: {
+      "Content-Type": "image/svg+xml; charset=utf-8",
+      // Cache aggressively at CF edge; SVG is deterministic per (smiles, w, h)
+      "Cache-Control": "public, max-age=86400, s-maxage=604800, immutable",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
+// ─────────────────────────────────────────────────────────
 // Router
 // ─────────────────────────────────────────────────────────
 
@@ -401,6 +462,9 @@ export default {
     if (req.method === "GET" && url.pathname === "/ama/list") return handleAmaList(url, env, origin);
     if (req.method === "GET" && url.pathname === "/ama/admin/list") return handleAmaAdminList(url, env, origin);
     if (req.method === "POST" && url.pathname === "/ama/answer") return handleAmaAnswer(req, env, origin);
+
+    // Public SMILES-to-SVG embed
+    if (req.method === "GET" && url.pathname === "/mol/svg") return handleMolSvg(url);
 
     return jsonResponse({ error: "not_found" }, 404, origin);
   },

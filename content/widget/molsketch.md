@@ -50,7 +50,37 @@ Paste a SMILES, edit the structure, export as SMILES / InChI / MOL block. Conven
     <button id="mol-read-btn" type="button">Read from editor</button>
     <span id="mol-status" class="mol-hint"></span>
   </div>
-  <p class="mol-credit">Molecule editing powered by <a href="https://jsme-editor.github.io/" target="_blank" rel="noopener">JSME</a> (Peter Ertl &amp; Bruno Bienfait).</p>
+
+  <h4 class="mol-embed-h">Embed this molecule elsewhere</h4>
+  <p class="mol-hint" style="margin-top: -0.5em;">Drop the <code>&lt;img&gt;</code> tag into any HTML/Markdown that allows raw HTML. Rendered server-side from SMILES, cached at the CDN edge.</p>
+  <div class="mol-embed">
+    <div class="mol-embed-preview" id="mol-embed-preview"></div>
+    <div class="mol-out-grid">
+      <label>Embed URL
+        <div class="mol-out-row">
+          <input id="mol-embed-url" type="text" readonly>
+          <button data-copy="mol-embed-url" type="button" class="mol-copy">Copy</button>
+        </div>
+      </label>
+      <label>&lt;img&gt; tag
+        <div class="mol-out-row">
+          <input id="mol-embed-img" type="text" readonly>
+          <button data-copy="mol-embed-img" type="button" class="mol-copy">Copy</button>
+        </div>
+      </label>
+    </div>
+    <div class="mol-row">
+      <label style="flex: 0 0 auto;">Width
+        <input id="mol-embed-w" type="number" min="50" max="1200" step="50" value="400" style="width: 90px;">
+      </label>
+      <label style="flex: 0 0 auto;">Height
+        <input id="mol-embed-h" type="number" min="50" max="1200" step="50" value="300" style="width: 90px;">
+      </label>
+      <button id="mol-embed-refresh" type="button">Refresh preview</button>
+    </div>
+  </div>
+
+  <p class="mol-credit">Molecule editing powered by <a href="https://jsme-editor.github.io/" target="_blank" rel="noopener">JSME</a> (Peter Ertl &amp; Bruno Bienfait). Server-side rendering powered by <a href="https://github.com/cheminfo/openchemlib-js" target="_blank" rel="noopener">OpenChemLib</a>.</p>
 </div>
 
 <style>
@@ -118,7 +148,36 @@ Paste a SMILES, edit the structure, export as SMILES / InChI / MOL block. Conven
 .mol-out-row input, .mol-out-row textarea { flex: 1; }
 .mol-out-row button { align-self: stretch; }
 .mol-hint { font-size: 0.85em; color: var(--secondary, #888); }
+.mol-hint code { background: rgba(0,0,0,0.06); padding: 0 0.25em; border-radius: 3px; font-size: 0.95em; }
 .mol-credit { font-size: 0.8em; color: var(--secondary, #888); margin-top: 1.5em; }
+.mol-embed-h { font-size: 1em; margin: 2em 0 0.3em; }
+.mol-embed-preview {
+  border: 1px solid var(--border, #d0d0d0);
+  border-radius: 4px;
+  background: #fff;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+.mol-embed-preview img { display: block; max-width: 100%; height: auto; }
+.mol-embed-preview .mol-embed-empty { color: #aaa; font-size: 0.85em; }
+#mol-app input[type="number"] {
+  display: block;
+  width: 100%;
+  margin-top: 0.3em;
+  padding: 0.5em 0.7em;
+  font-size: 0.95em;
+  border: 1px solid var(--border, #d0d0d0);
+  border-radius: 4px;
+  background: var(--theme, #fff);
+  color: var(--primary, #1a1a1a);
+  box-sizing: border-box;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
 @media (max-width: 480px) {
   .mol-editor { height: 360px; }
 }
@@ -206,6 +265,46 @@ Paste a SMILES, edit the structure, export as SMILES / InChI / MOL block. Conven
     readFromEditor();
     setStatus("Read.");
   });
+
+  // ── Embed (server-rendered SVG) ────────────────────────
+  const EMBED_BASE = "https://match.junren.li/mol/svg";
+
+  function updateEmbed() {
+    const smiles = $("mol-out-smiles").value.trim();
+    const preview = $("mol-embed-preview");
+    const w = parseInt($("mol-embed-w").value, 10) || 400;
+    const h = parseInt($("mol-embed-h").value, 10) || 300;
+    if (!smiles) {
+      preview.innerHTML = '<span class="mol-embed-empty">Click "Read from editor" to populate.</span>';
+      $("mol-embed-url").value = "";
+      $("mol-embed-img").value = "";
+      return;
+    }
+    const url = EMBED_BASE + "?smiles=" + encodeURIComponent(smiles)
+              + "&w=" + w + "&h=" + h;
+    $("mol-embed-url").value = url;
+    $("mol-embed-img").value = '<img src="' + url + '" alt="' + smiles + '" width="' + w + '" height="' + h + '">';
+    preview.innerHTML = '';
+    const img = new Image();
+    img.src = url;
+    img.alt = smiles;
+    img.onerror = () => {
+      preview.innerHTML = '<span class="mol-embed-empty">Failed to render SVG.</span>';
+    };
+    preview.appendChild(img);
+  }
+
+  // Hook readFromEditor so embed updates after reading
+  const _origReadFromEditor = readFromEditor;
+  readFromEditor = function () {
+    _origReadFromEditor();
+    updateEmbed();
+  };
+
+  $("mol-embed-refresh").addEventListener("click", updateEmbed);
+  $("mol-embed-w").addEventListener("change", updateEmbed);
+  $("mol-embed-h").addEventListener("change", updateEmbed);
+  updateEmbed();
 
   document.querySelectorAll(".mol-copy").forEach((btn) => {
     btn.addEventListener("click", async () => {
