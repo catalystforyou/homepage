@@ -380,6 +380,88 @@ async function handleAmaAnswer(req: Request, env: Env, origin: string | null): P
 }
 
 // ─────────────────────────────────────────────────────────
+// Geoguess leaderboard
+// ─────────────────────────────────────────────────────────
+
+const GEO_ROUNDS = 5;
+const GEO_MAX_SCORE_PER_ROUND = 5000;
+const GEO_MAX_TOTAL = GEO_ROUNDS * GEO_MAX_SCORE_PER_ROUND;
+const GEO_MAX_NAME_LEN = 20;
+const GEO_LB_MAX_LIMIT = 100;
+
+async function handleGeoSubmit(req: Request, env: Env, origin: string | null): Promise<Response> {
+  const body = await readJson(req);
+  if (body === null) return jsonResponse({ error: "invalid_json" }, 400, origin);
+  const b = body as { name?: unknown; score?: unknown; breakdown?: unknown };
+
+  const name = cleanText(b?.name, GEO_MAX_NAME_LEN);
+  if (!name) return jsonResponse({ error: "invalid_name" }, 400, origin);
+
+  const score = Number(b?.score);
+  if (!Number.isInteger(score) || score < 0 || score > GEO_MAX_TOTAL) {
+    return jsonResponse({ error: "invalid_score" }, 400, origin);
+  }
+
+  let breakdownJson: string | null = null;
+  if (Array.isArray(b?.breakdown)) {
+    // Keep at most 10 rounds, each {dist, score}, both numbers, score in range.
+    const arr = (b.breakdown as unknown[]).slice(0, 10).map((row) => {
+      const r = row as { dist?: unknown; score?: unknown };
+      const d = Number(r?.dist);
+      const s = Number(r?.score);
+      return {
+        dist: isFinite(d) ? d : null,
+        score: Number.isInteger(s) && s >= 0 && s <= GEO_MAX_SCORE_PER_ROUND ? s : 0,
+      };
+    });
+    const sum = arr.reduce((a, x) => a + x.score, 0);
+    if (sum !== score) {
+      return jsonResponse({ error: "breakdown_score_mismatch" }, 400, origin);
+    }
+    breakdownJson = JSON.stringify(arr);
+  }
+
+  const now = Date.now();
+  const ip = req.headers.get("CF-Connecting-IP") || "";
+  const ins = await env.DB.prepare(
+    "INSERT INTO geoguess_scores (name, score, breakdown, created_at, ip) VALUES (?1, ?2, ?3, ?4, ?5)"
+  ).bind(name, score, breakdownJson, now, ip).run();
+  const id = Number(ins.meta.last_row_id ?? 0);
+
+  const rankRow = await env.DB.prepare(
+    "SELECT COUNT(*) + 1 AS rank FROM geoguess_scores WHERE score > ?1"
+  ).bind(score).first<{ rank: number }>();
+
+  return jsonResponse({ ok: true, id, rank: rankRow?.rank ?? null }, 200, origin);
+}
+
+async function handleGeoLeaderboard(url: URL, env: Env, origin: string | null): Promise<Response> {
+  const limitRaw = parseInt(url.searchParams.get("limit") || "20", 10);
+  const limit = Math.min(Math.max(isFinite(limitRaw) ? limitRaw : 20, 1), GEO_LB_MAX_LIMIT);
+  const rows = await env.DB.prepare(
+    "SELECT id, name, score, breakdown, created_at FROM geoguess_scores ORDER BY score DESC, created_at ASC LIMIT ?1"
+  ).bind(limit).all();
+  const totalRow = await env.DB.prepare(
+    "SELECT COUNT(*) AS n FROM geoguess_scores"
+  ).first<{ n: number }>();
+  return jsonResponse({ rows: rows.results, total: totalRow?.n ?? 0 }, 200, origin);
+}
+
+async function handleGeoAdminDelete(req: Request, env: Env, origin: string | null): Promise<Response> {
+  const body = await readJson(req);
+  if (body === null) return jsonResponse({ error: "invalid_json" }, 400, origin);
+  const b = body as { key?: unknown; id?: unknown };
+  if (typeof b?.key !== "string" || !env.ADMIN_KEY || b.key !== env.ADMIN_KEY) {
+    return jsonResponse({ error: "forbidden" }, 403, origin);
+  }
+  const id = Number(b?.id);
+  if (!Number.isInteger(id) || id <= 0) return jsonResponse({ error: "invalid_id" }, 400, origin);
+  const res = await env.DB.prepare("DELETE FROM geoguess_scores WHERE id = ?1").bind(id).run();
+  if ((res.meta.changes ?? 0) === 0) return jsonResponse({ error: "not_found" }, 404, origin);
+  return jsonResponse({ ok: true }, 200, origin);
+}
+
+// ─────────────────────────────────────────────────────────
 // SMILES → SVG (public embed endpoint)
 // ─────────────────────────────────────────────────────────
 
@@ -465,6 +547,11 @@ export default {
 
     // Public SMILES-to-SVG embed
     if (req.method === "GET" && url.pathname === "/mol/svg") return handleMolSvg(url);
+
+    // Geoguess leaderboard
+    if (req.method === "POST" && url.pathname === "/geo/score")        return handleGeoSubmit(req, env, origin);
+    if (req.method === "GET"  && url.pathname === "/geo/leaderboard")  return handleGeoLeaderboard(url, env, origin);
+    if (req.method === "POST" && url.pathname === "/geo/admin/delete") return handleGeoAdminDelete(req, env, origin);
 
     return jsonResponse({ error: "not_found" }, 404, origin);
   },

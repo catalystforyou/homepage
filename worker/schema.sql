@@ -25,3 +25,15 @@ CREATE TABLE IF NOT EXISTS ama_questions (
 
 CREATE INDEX IF NOT EXISTS idx_ama_status ON ama_questions(status, answered_at DESC);
 CREATE INDEX IF NOT EXISTS idx_ama_created ON ama_questions(created_at DESC);
+
+CREATE TABLE IF NOT EXISTS geoguess_scores (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  name        TEXT    NOT NULL,
+  score       INTEGER NOT NULL,
+  breakdown   TEXT,
+  created_at  INTEGER NOT NULL,
+  ip          TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_geo_score ON geoguess_scores(score DESC, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_geo_created ON geoguess_scores(created_at DESC);

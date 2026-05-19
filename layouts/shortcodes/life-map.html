@@ -50,7 +50,7 @@
             </div>
             <p class="geo-save-status" id="geo-save-status"></p>
             <div class="geo-leaderboard">
-                <h4>Local leaderboard <span class="geo-lb-hint">(stays on this device)</span></h4>
+                <h4>Global leaderboard <span class="geo-lb-hint" id="geo-lb-meta">(loading…)</span></h4>
                 <ol id="geo-lb-list"></ol>
             </div>
             <div class="geo-end-actions">
@@ -341,13 +341,13 @@ document.addEventListener("DOMContentLoaded", function() {
     var ROUNDS = 5;
     var EARTH_RADIUS_KM = 6371;
     var SCORE_SCALE_KM = 2000;   // exp(-d/2000) → 5000 max
-    var LB_KEY = 'junren_geoguess_lb_v1';
 
     var game = null;             // { round, scores: [], history: [{photo, guess, distanceKm, score}], state: 'guessing'|'revealed' }
     var truthMarker = null;
     var guessMarker = null;
     var connector = null;
-    var lastSavedIdx = -1;       // for highlighting in leaderboard
+    var GEO_API = 'https://match.junren.li';
+    var savedScoreId = null;     // id returned by /geo/score after a save (used to highlight)
 
     function haversineKm(a, b) {
         const toRad = (x) => x * Math.PI / 180;
@@ -488,32 +488,46 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('geo-final-breakdown').textContent = bd;
         document.getElementById('geo-name').value = '';
         document.getElementById('geo-save-status').textContent = '';
-        lastSavedIdx = -1;
-        renderLeaderboard(total);
+        document.getElementById('geo-save').disabled = false;
+        savedScoreId = null;
+        loadLeaderboardFromServer();
         getEnd().style.display = 'flex';
     }
 
-    // ── Leaderboard (localStorage) ────────────────────────
-    function loadLeaderboard() {
-        try {
-            var v = JSON.parse(localStorage.getItem(LB_KEY) || '[]');
-            return Array.isArray(v) ? v : [];
-        } catch (_) { return []; }
+    // ── Leaderboard (server-backed) ───────────────────────
+    function formatDate(ms) {
+        var d = new Date(ms);
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
     }
-    function saveLeaderboard(lb) {
-        try { localStorage.setItem(LB_KEY, JSON.stringify(lb)); } catch (_) {}
-    }
-    function renderLeaderboard(currentScore) {
-        var lb = loadLeaderboard();
+    function loadLeaderboardFromServer() {
         var listEl = document.getElementById('geo-lb-list');
-        if (lb.length === 0) {
-            listEl.innerHTML = '<li class="geo-lb-empty">No saved scores yet.</li>';
-            return;
-        }
-        listEl.innerHTML = lb.map((e, i) => {
-            var cls = (i === lastSavedIdx) ? ' class="geo-lb-self"' : '';
-            return '<li' + cls + '>' + escapeHtml(e.name) + ' — ' + Number(e.score).toLocaleString() + ' pts <span style="color:#aaa; font-size:0.8em;">' + e.date + '</span></li>';
-        }).join('');
+        var metaEl = document.getElementById('geo-lb-meta');
+        metaEl.textContent = '(loading…)';
+        listEl.innerHTML = '<li class="geo-lb-empty">Loading…</li>';
+        fetch(GEO_API + '/geo/leaderboard?limit=20')
+            .then(r => r.ok ? r.json() : Promise.reject(r.status))
+            .then(d => {
+                var rows = d.rows || [];
+                var total = d.total || 0;
+                metaEl.textContent = '(' + total + ' game' + (total === 1 ? '' : 's') + ' played)';
+                if (rows.length === 0) {
+                    listEl.innerHTML = '<li class="geo-lb-empty">No scores yet — be the first.</li>';
+                    return;
+                }
+                listEl.innerHTML = rows.map((e) => {
+                    var cls = (e.id === savedScoreId) ? ' class="geo-lb-self"' : '';
+                    return '<li' + cls + '>' + escapeHtml(e.name) + ' — '
+                         + Number(e.score).toLocaleString() + ' pts '
+                         + '<span style="color:#aaa; font-size:0.8em;">' + formatDate(e.created_at) + '</span></li>';
+                }).join('');
+            })
+            .catch(() => {
+                metaEl.textContent = '(failed to load)';
+                listEl.innerHTML = '<li class="geo-lb-empty">Couldn\'t load leaderboard.</li>';
+            });
     }
     function escapeHtml(s) {
         return String(s).replace(/[&<>"']/g, (c) => ({
@@ -542,18 +556,36 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById('geo-save').addEventListener('click', () => {
         var nm = document.getElementById('geo-name').value.trim().slice(0, 20);
-        if (!nm) { document.getElementById('geo-save-status').textContent = 'Enter a name first.'; return; }
+        var statusEl = document.getElementById('geo-save-status');
+        if (!nm) { statusEl.textContent = 'Enter a name first.'; return; }
         var total = game.history.reduce((s, h) => s + h.score, 0);
-        var lb = loadLeaderboard();
-        var entry = { name: nm, score: total, date: new Date().toISOString().slice(0, 10) };
-        lb.push(entry);
-        lb.sort((a, b) => b.score - a.score);
-        if (lb.length > 50) lb = lb.slice(0, 50);
-        saveLeaderboard(lb);
-        lastSavedIdx = lb.indexOf(entry);
-        document.getElementById('geo-save-status').textContent = 'Saved.';
-        document.getElementById('geo-save').disabled = true;
-        renderLeaderboard(total);
+        var breakdown = game.history.map(h => ({
+            dist: isFinite(h.distanceKm) ? Math.round(h.distanceKm * 1000) / 1000 : null,
+            score: h.score,
+        }));
+        var btn = document.getElementById('geo-save');
+        btn.disabled = true;
+        statusEl.textContent = 'Saving…';
+        fetch(GEO_API + '/geo/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: nm, score: total, breakdown: breakdown }),
+        })
+        .then(r => r.json().then(d => ({ ok: r.ok, d: d })))
+        .then(res => {
+            if (!res.ok) {
+                statusEl.textContent = 'Failed: ' + (res.d.error || 'unknown');
+                btn.disabled = false;
+                return;
+            }
+            savedScoreId = res.d.id;
+            statusEl.textContent = 'Saved · rank #' + res.d.rank + ' globally.';
+            loadLeaderboardFromServer();
+        })
+        .catch(() => {
+            statusEl.textContent = 'Network error.';
+            btn.disabled = false;
+        });
     });
     document.getElementById('geo-restart').addEventListener('click', () => {
         document.getElementById('geo-save').disabled = false;
