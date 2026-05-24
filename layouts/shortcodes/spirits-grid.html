@@ -1,0 +1,323 @@
+<div id="spirits-app">
+  <div class="spirits-controls">
+    <label>
+      <span class="spirits-label">Filter</span>
+      <select id="spirits-filter">
+        <option value="all">All</option>
+        <option value="Single Malt Scotch">Single Malt Scotch</option>
+        <option value="Blended Scotch">Blended Scotch</option>
+        <option value="Blended Malt Scotch">Blended Malt Scotch</option>
+        <option value="Single Malt Scotch (IB)">Independent Bottlings</option>
+        <option value="Blended Japanese Whisky">Japanese Whisky</option>
+        <option value="Chinese Single Malt">Chinese Single Malt</option>
+        <option value="Baijiu">Baijiu</option>
+        <option value="Gin">Gin</option>
+        <option value="Absinthe">Absinthe</option>
+        <option value="Single Malt">Other Single Malt (non-Scotch)</option>
+      </select>
+    </label>
+    <label>
+      <span class="spirits-label">Sort by</span>
+      <select id="spirits-sort">
+        <option value="rarity-desc">Rarity ↓</option>
+        <option value="rarity-asc">Rarity ↑</option>
+        <option value="rating-desc">My rating ↓</option>
+        <option value="abv-desc">ABV ↓</option>
+        <option value="abv-asc">ABV ↑</option>
+        <option value="age-desc">Age ↓</option>
+        <option value="age-asc">Age ↑</option>
+        <option value="sweet-desc">Sweet ↓</option>
+        <option value="smoky-desc">Smoky ↓</option>
+        <option value="fruity-desc">Fruity ↓</option>
+        <option value="spicy-desc">Spicy ↓</option>
+        <option value="woody-desc">Woody ↓</option>
+        <option value="floral-desc">Floral ↓</option>
+        <option value="alpha">Alphabetical</option>
+      </select>
+    </label>
+    <span class="spirits-count" id="spirits-count"></span>
+  </div>
+  <div class="spirits-grid" id="spirits-grid">
+    <div class="spirits-loading">Loading the bar…</div>
+  </div>
+</div>
+
+<style>
+#spirits-app { margin: 1.5em 0 2em; }
+.spirits-controls {
+  display: flex;
+  gap: 1em;
+  align-items: end;
+  margin-bottom: 1.2em;
+  flex-wrap: wrap;
+}
+.spirits-controls label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85em;
+  color: var(--secondary, #888);
+  gap: 0.25em;
+}
+.spirits-controls select {
+  padding: 0.4em 0.6em;
+  font-size: 0.95em;
+  border: 1px solid var(--border, #d0d0d0);
+  border-radius: 4px;
+  background: var(--theme, #fff);
+  color: var(--primary, #1a1a1a);
+  font-family: inherit;
+  min-width: 180px;
+}
+.spirits-count {
+  margin-left: auto;
+  font-size: 0.85em;
+  color: var(--secondary, #999);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+.spirits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2em;
+}
+.spirits-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2em;
+  color: var(--secondary, #888);
+  font-style: italic;
+}
+.spirit-card {
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  padding: 0;
+  background: var(--theme, #fff);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.spirit-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #f6f6f6;
+  display: block;
+}
+.spirit-body { padding: 0.9em 1em 1em; }
+.spirit-title {
+  font-size: 1.02em;
+  font-weight: 600;
+  margin: 0 0 0.35em;
+  color: var(--primary, #1a1a1a);
+  line-height: 1.3;
+}
+.spirit-meta {
+  font-size: 0.78em;
+  color: var(--secondary, #777);
+  margin-bottom: 0.6em;
+  line-height: 1.5;
+}
+.spirit-meta .sep { opacity: 0.4; margin: 0 0.35em; }
+.spirit-rarity { color: #c89a3a; letter-spacing: 1px; }
+.spirit-rarity-dim { color: #ddd; letter-spacing: 1px; }
+.spirit-rating-pos { color: #2e7d32; font-weight: 600; }
+.spirit-rating-empty { color: #bbb; font-style: italic; }
+.spirit-radar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  margin: 0.4em 0 0.6em;
+}
+.spirit-radar { flex: 0 0 130px; }
+.spirit-notes {
+  flex: 1;
+  font-size: 0.78em;
+  color: var(--secondary, #888);
+  line-height: 1.4;
+  font-style: italic;
+}
+.spirit-comment {
+  font-size: 0.88em;
+  color: var(--primary, #1a1a1a);
+  border-top: 1px solid var(--border, #eee);
+  padding-top: 0.6em;
+  margin-top: 0.4em;
+  line-height: 1.5;
+}
+.spirit-comment-empty {
+  font-size: 0.82em;
+  color: #bbb;
+  font-style: italic;
+  border-top: 1px solid var(--border, #eee);
+  padding-top: 0.6em;
+  margin-top: 0.4em;
+}
+@media (prefers-color-scheme: dark) {
+  .spirit-card { background: rgba(255,255,255,0.03); }
+  .spirit-photo { background: #222; }
+}
+</style>
+
+<script>
+(function () {
+  var GRID = document.getElementById('spirits-grid');
+  var COUNT = document.getElementById('spirits-count');
+  var FILTER = document.getElementById('spirits-filter');
+  var SORT = document.getElementById('spirits-sort');
+  var DATA = [];
+
+  // Map filter values → predicate functions, so we can group related categories.
+  var FILTER_GROUPS = {
+    "Single Malt Scotch (IB)": function (s) { return s.category === "Single Malt Scotch (IB)"; },
+    "Single Malt": function (s) { return s.category === "Single Malt"; },
+  };
+
+  // ── Radar SVG generator ─────────────────────────────────
+  var AXES = [
+    { key: "sweet",  label: "Sweet"  },
+    { key: "smoky",  label: "Smoky"  },
+    { key: "fruity", label: "Fruity" },
+    { key: "spicy",  label: "Spicy"  },
+    { key: "woody",  label: "Woody"  },
+    { key: "floral", label: "Floral" }
+  ];
+  function renderRadar(flavors) {
+    var size = 130, pad = 18;
+    var cx = size / 2, cy = size / 2, r = (size / 2) - pad;
+    var n = AXES.length;
+    var angles = AXES.map(function (_, i) { return -Math.PI / 2 + i * 2 * Math.PI / n; });
+    var rings = [1, 2, 3, 4, 5];
+
+    var parts = [];
+    parts.push('<svg viewBox="0 0 ' + size + ' ' + size + '" class="radar-svg" aria-hidden="true">');
+
+    rings.forEach(function (lvl) {
+      var pts = angles.map(function (a) {
+        var rr = (lvl / 5) * r;
+        return (cx + rr * Math.cos(a)).toFixed(1) + ',' + (cy + rr * Math.sin(a)).toFixed(1);
+      }).join(' ');
+      parts.push('<polygon points="' + pts + '" fill="none" stroke="#e3e3e3" stroke-width="0.6"/>');
+    });
+    angles.forEach(function (a) {
+      var x2 = cx + r * Math.cos(a), y2 = cy + r * Math.sin(a);
+      parts.push('<line x1="' + cx + '" y1="' + cy + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="#e3e3e3" stroke-width="0.6"/>');
+    });
+    var dataPts = AXES.map(function (ax, i) {
+      var v = Math.max(0, Math.min(5, Number(flavors[ax.key]) || 0));
+      var rr = (v / 5) * r;
+      return (cx + rr * Math.cos(angles[i])).toFixed(1) + ',' + (cy + rr * Math.sin(angles[i])).toFixed(1);
+    }).join(' ');
+    parts.push('<polygon points="' + dataPts + '" fill="rgba(180,40,40,0.32)" stroke="#b42828" stroke-width="1.4" stroke-linejoin="round"/>');
+
+    AXES.forEach(function (ax, i) {
+      var a = angles[i];
+      var lx = cx + (r + 9) * Math.cos(a);
+      var ly = cy + (r + 9) * Math.sin(a) + 2;
+      parts.push('<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle" font-size="8" fill="#888">' + ax.label + '</text>');
+    });
+    parts.push('</svg>');
+    return parts.join('');
+  }
+
+  // ── Helpers ─────────────────────────────────────────────
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function rarityStars(r) {
+    r = Math.max(0, Math.min(5, Number(r) || 0));
+    var on = '★'.repeat(r), off = '★'.repeat(5 - r);
+    return '<span class="spirit-rarity">' + on + '</span><span class="spirit-rarity-dim">' + off + '</span>';
+  }
+  function ratingDisplay(r) {
+    if (r == null) return '<span class="spirit-rating-empty">unrated</span>';
+    var stars = '★'.repeat(Math.max(0, Math.min(5, Math.round(Number(r)))));
+    return '<span class="spirit-rating-pos">' + stars + '</span>';
+  }
+
+  // ── Card markup ─────────────────────────────────────────
+  function cardHtml(s) {
+    var meta = [];
+    if (s.category) meta.push(escapeHtml(s.category));
+    if (s.region)   meta.push(escapeHtml(s.region));
+    if (s.age)      meta.push(escapeHtml(s.age) + 'y');
+    if (s.abv)      meta.push(escapeHtml(s.abv) + '%');
+    var metaLine = meta.join('<span class="sep">·</span>');
+
+    var commentHtml = s.comment
+      ? '<div class="spirit-comment">' + escapeHtml(s.comment) + '</div>'
+      : '<div class="spirit-comment-empty">— no personal comment yet</div>';
+
+    return '' +
+      '<article class="spirit-card">' +
+        '<img class="spirit-photo" src="' + escapeHtml(s.image) + '" alt="' + escapeHtml(s.title) + '" loading="lazy" referrerpolicy="no-referrer">' +
+        '<div class="spirit-body">' +
+          '<div class="spirit-title">' + escapeHtml(s.title) + '</div>' +
+          '<div class="spirit-meta">' + metaLine + '</div>' +
+          '<div class="spirit-meta">' +
+            'Rarity ' + rarityStars(s.rarity) +
+            '<span class="sep">·</span>My rating ' + ratingDisplay(s.rating) +
+          '</div>' +
+          '<div class="spirit-radar-row">' +
+            '<div class="spirit-radar">' + renderRadar(s.flavors || {}) + '</div>' +
+            '<div class="spirit-notes">' + escapeHtml(s.notes || '') + '</div>' +
+          '</div>' +
+          commentHtml +
+        '</div>' +
+      '</article>';
+  }
+
+  // ── Sort / filter ───────────────────────────────────────
+  function applyFilter(arr, mode) {
+    if (mode === 'all') return arr;
+    if (FILTER_GROUPS[mode]) return arr.filter(FILTER_GROUPS[mode]);
+    return arr.filter(function (s) { return s.category === mode; });
+  }
+  function applySort(arr, mode) {
+    var copy = arr.slice();
+    function num(x) { return (x == null || isNaN(Number(x))) ? -Infinity : Number(x); }
+    var sorters = {
+      'rarity-desc':  function (a, b) { return num(b.rarity) - num(a.rarity); },
+      'rarity-asc':   function (a, b) { return num(a.rarity) - num(b.rarity); },
+      'rating-desc':  function (a, b) { return num(b.rating) - num(a.rating); },
+      'abv-desc':     function (a, b) { return num(b.abv) - num(a.abv); },
+      'abv-asc':      function (a, b) { return num(a.abv) - num(b.abv); },
+      'age-desc':     function (a, b) { return num(b.age) - num(a.age); },
+      'age-asc':      function (a, b) { return num(a.age) - num(b.age); },
+      'alpha':        function (a, b) { return String(a.title).localeCompare(String(b.title)); }
+    };
+    ['sweet','smoky','fruity','spicy','woody','floral'].forEach(function (k) {
+      sorters[k + '-desc'] = function (a, b) {
+        return num((b.flavors||{})[k]) - num((a.flavors||{})[k]);
+      };
+    });
+    var fn = sorters[mode] || sorters['rarity-desc'];
+    copy.sort(fn);
+    return copy;
+  }
+
+  // ── Render ──────────────────────────────────────────────
+  function render() {
+    var arr = applyFilter(DATA, FILTER.value);
+    arr = applySort(arr, SORT.value);
+    COUNT.textContent = arr.length + ' / ' + DATA.length + ' bottles';
+    if (arr.length === 0) {
+      GRID.innerHTML = '<div class="spirits-loading">Nothing matches this filter.</div>';
+      return;
+    }
+    GRID.innerHTML = arr.map(cardHtml).join('');
+  }
+
+  FILTER.addEventListener('change', render);
+  SORT.addEventListener('change', render);
+
+  fetch('/data/spirits.json')
+    .then(function (r) { return r.json(); })
+    .then(function (rows) { DATA = rows; render(); })
+    .catch(function (e) {
+      GRID.innerHTML = '<div class="spirits-loading">Couldn\'t load spirits data.</div>';
+      console.error(e);
+    });
+})();
+</script>
