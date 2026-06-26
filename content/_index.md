@@ -59,15 +59,15 @@ draft: false
             I am currently a Ph.D. candidate at the College of Chemistry and Molecular Engineering, Peking University, where I also received my B.S. in Chemistry (2018–2022). I am fortunate to be advised by Prof. Luhua Lai and Prof. Zhirong Liu.
         </p>
         <p>
-            My research philosophy is rooted in a single, driving ambition: to accelerate scientific discovery by bridging the gap between fundamental chemistry and artificial intelligence. I am passionate about liberating researchers from the tedious trial-and-error loops of traditional experiments through data-driven approaches and automation.
+            I work at the intersection of chemistry and large language models, and I think of myself less as someone who applies AI to chemistry than as an AGI-native researcher. I take it as a working assumption that frontier models will keep absorbing the routine layer of research; what stays scarce is judgment, taste, and the willingness to ask which problems are worth solving at all. Polishing another accuracy point on a saturated benchmark is no longer where I want to spend that judgment.
         </p>
         <p>
-            My primary research interests lie in chemical reaction prediction, including:
+            Concretely, my work falls into three layers:
         </p>
         <ul>
-            <li><strong>Retrosynthesis Planning:</strong> Navigating the vast chemical space to find optimal synthetic routes.</li>
-            <li><strong>Reaction Mechanism Analysis:</strong> Deciphering the underlying logic of chemical transformations.</li>
-            <li><strong>Reaction Procedure Recommendation:</strong> Predicting experimental actions to maximize yield and efficiency.</li>
+            <li><strong>Measuring the frontier:</strong> building benchmarks and hard evaluations that probe where today's models actually fail on real scientific problems (e.g. <a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener">SUPERChem</a>, and earlier work mapping the ceiling of single-step retrosynthesis).</li>
+            <li><strong>Forging tools:</strong> turning model capability into grounded, verifiable tools that scientists actually use, such as <a href="https://syncraft.junren.li" target="_blank" rel="noopener">SynCraft</a> for synthesizability optimization and <a href="https://revenant.junren.li" target="_blank" rel="noopener">Revenant</a> for reaction-failure diagnosis.</li>
+            <li><strong>Probing beyond it (AGI+1):</strong> using domain insight plus coding agents as leverage to enter problems that would once have taken a whole group years to approach.</li>
         </ul>
         <p>
             Beyond my academic studies at Peking University, my journey has been shaped by continuous engagement with world-class research labs. I have spent extensive time as a research intern within the Microsoft Research (MSR) ecosystem, collaborating with leading experts to push the boundaries of AI for Science. This includes my time at MSRA (May 2022 – Nov 2023), MSR AI4S Beijing (Mar 2025 – Sep 2025), and most recently MSR AI4S Cambridge (Jan 2026 – May 2026), where I explored the intersection of LLMs and chemistry.
