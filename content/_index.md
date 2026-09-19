@@ -5,22 +5,9 @@ draft: false
 hideMeta: true
 ---
 
-<div class="language-switcher" role="group" aria-label="Language">
-  <button type="button" class="language-button is-active" data-language="en">EN</button>
-  <span aria-hidden="true">/</span>
-  <button type="button" class="language-button" data-language="zh">中文</button>
-</div>
-
 <a href="/off-duty/life-diffusion-model/" class="geoguess-hint" title="A geoguess game inside my travel-photo map">🎯 <em>geoguess inside</em> →</a>
 
 <style>
-.language-switcher { display:flex; gap:.35rem; justify-content:flex-end; align-items:center; margin:-.6rem 0 1.2rem; font-size:.82rem; color:var(--secondary); }
-.language-button { border:0; background:transparent; color:var(--secondary); cursor:pointer; padding:.2rem .35rem; border-radius:4px; font:inherit; }
-.language-button:hover, .language-button.is-active { color:var(--primary); background:var(--code-bg); }
-.lang-en { display:revert; }
-.lang-zh { display:none; }
-body.lang-zh-active .lang-en { display:none; }
-body.lang-zh-active .lang-zh { display:revert; }
 .home-hero { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:2rem; align-items:start; }
 .home-hero figure { margin:0; }.home-hero img { width:100%; height:auto; border-radius:8px; display:block; }.home-hero figcaption { font-size:.82rem; color:var(--secondary); margin-top:.55rem; font-style:italic; }
 .home-section { margin-top:2.3rem; }.home-section h2 { margin-bottom:.8rem; }.recent-update { padding:.8rem 1rem; border-left:3px solid var(--primary); background:var(--code-bg); border-radius:0 6px 6px 0; }
@@ -34,29 +21,24 @@ body.lang-zh-active .lang-zh { display:revert; }
 
 <div class="home-hero">
   <div class="home-intro">
-    <div class="lang-en"><p>I’m Junren Li (李隽仁), a chemistry PhD candidate at Peking University. My advisors are Luhua Lai and Zhirong Liu, and I expect to graduate in June 2027. I received my B.S. in Chemistry from Peking University (2018–2022).</p><p>My research covers synthesis planning, chemical reasoning, and the evaluation of language models. I am increasingly interested in scientific agents: how to choose useful tasks, provide reliable feedback, and evaluate whether their work helps solve scientific problems.</p><p>I describe myself as an <strong>AGI-native researcher</strong>. I use models and coding agents throughout my work, while spending much of my own effort on choosing problems, understanding results, and deciding what needs to be checked.</p></div>
-    <div class="lang-zh"><p>我是李隽仁，目前是北京大学化学博士候选人，导师为赖鲁华教授和刘志荣教授，预计于 2027 年 6 月毕业。本科就读于北京大学化学专业（2018–2022）。</p><p>我的研究涉及合成规划、化学推理与语言模型评测。近期我尤其关注 scientific agents：如何选择有价值的任务、提供可靠的反馈，以及评估这些系统是否真正帮助解决科学问题。</p><p>我把自己描述为一名 <strong>AGI-native researcher</strong>。我在研究中持续使用模型和编程代理，把更多精力放在选择问题、理解结果，以及判断哪些地方需要核查。</p></div>
+    <div><p>I’m Junren Li, a chemistry PhD candidate at Peking University. My advisors are Luhua Lai and Zhirong Liu, and I expect to graduate in June 2027. I received my B.S. in Chemistry from Peking University (2018–2022).</p><p>My research covers synthesis planning, chemical reasoning, and the evaluation of language models. I am increasingly interested in scientific agents: how to choose useful tasks, provide reliable feedback, and evaluate whether their work helps solve scientific problems.</p><p>I use models and coding agents throughout my work, while spending much of my own effort on choosing problems, understanding results, and deciding what needs to be checked.</p></div>
   </div>
-  <figure><img src="https://img.junren.li/Lindau_talk.jpg" alt="Junren Li at the Lindau Nobel Laureate Meeting"><figcaption><span class="lang-en">74th Lindau Nobel Laureate Meeting · July 2025</span><span class="lang-zh">第 74 届林道诺贝尔奖获得者大会 · 2025 年 7 月</span></figcaption></figure>
+  <figure><img src="https://img.junren.li/Lindau_talk.jpg" alt="Junren Li at the Lindau Nobel Laureate Meeting"><figcaption>74th Lindau Nobel Laureate Meeting · July 2025</figcaption></figure>
 </div>
 
-<section class="home-section"><h2><span class="lang-en">Recent updates</span><span class="lang-zh">近期动态</span></h2><div class="recent-update"><div><span class="lang-en"><strong>SynCraft</strong> has been accepted by <em>Nature Machine Intelligence</em>.</span><span class="lang-zh"><strong>SynCraft</strong> 已被 <em>Nature Machine Intelligence</em> 接收。</span></div><div style="margin-top:.55rem;"><span class="lang-en"><strong>RetroChimera</strong> has been accepted by <em>Nature</em>.</span><span class="lang-zh"><strong>RetroChimera</strong> 已被 <em>Nature</em> 接收。</span></div></div></section>
+<section class="home-section"><h2>Recent updates</h2><div class="recent-update"><div><strong>SynCraft</strong> has been accepted by <em>Nature Machine Intelligence</em>.</div><div style="margin-top:.55rem;"><strong>RetroChimera</strong> has been accepted by <em>Nature</em>.</div></div></section>
 
-<section class="home-section"><h2><span class="lang-en">Selected work</span><span class="lang-zh">代表性工作</span></h2><div class="work-grid">
-  <article class="work-card"><h3><a href="https://syncraft.junren.li" target="_blank" rel="noopener">SynCraft</a></h3><p><span class="lang-en">Improving molecular synthesizability with LLM-guided structural edits.</span><span class="lang-zh">用大语言模型引导的结构编辑提升分子可合成性。</span></p><a href="https://arxiv.org/abs/2512.20333" target="_blank" rel="noopener"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a></article>
-  <article class="work-card"><h3><a href="https://arxiv.org/abs/2512.13668" target="_blank" rel="noopener">QFANG</a></h3><p><span class="lang-en">A reasoning model for generating experimental procedures from chemical reactions.</span><span class="lang-zh">从化学反应生成实验操作流程的推理模型。</span></p><a href="https://arxiv.org/abs/2512.13668" target="_blank" rel="noopener"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a></article>
-  <article class="work-card"><h3><a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener">SUPERChem</a></h3><p><span class="lang-en">Evaluating chemical reasoning beyond final-answer accuracy.</span><span class="lang-zh">评估超越最终答案准确率的化学推理能力。</span></p><a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a></article>
+<section class="home-section"><h2>Selected work</h2><div class="work-grid">
+  <article class="work-card"><h3><a href="https://syncraft.junren.li" target="_blank" rel="noopener">SynCraft</a></h3><p>Improving molecular synthesizability with LLM-guided structural edits.</p><a href="https://arxiv.org/abs/2512.20333" target="_blank" rel="noopener">Paper ↗</a></article>
+  <article class="work-card"><h3><a href="https://arxiv.org/abs/2512.13668" target="_blank" rel="noopener">QFANG</a></h3><p>A reasoning model for generating experimental procedures from chemical reactions.</p><a href="https://arxiv.org/abs/2512.13668" target="_blank" rel="noopener">Paper ↗</a></article>
+  <article class="work-card"><h3><a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener">SUPERChem</a></h3><p>Evaluating chemical reasoning beyond final-answer accuracy.</p><a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener">Paper ↗</a></article>
 </div></section>
 
-<section class="home-section"><h2><span class="lang-en">Selected research experience</span><span class="lang-zh">研究经历</span></h2>
-  <div class="experience-row"><div class="experience-place">MSRA</div><div><div class="experience-meta">Research intern · May 2022 – Nov 2023</div><span class="lang-en">Research in AI for chemistry.</span><span class="lang-zh">从事 AI for Chemistry 研究。</span></div></div>
-  <div class="experience-row"><div class="experience-place">Center for Algorithmic and Roboticized Synthesis, IBS</div><div><div class="experience-meta">Visiting research student · Oct 2024 – Dec 2024</div><span class="lang-en">Work on algorithmic and automated synthesis.</span><span class="lang-zh">参与算法化与自动化合成研究。</span></div></div>
-  <div class="experience-row"><div class="experience-place">MSR AI4S Beijing</div><div><div class="experience-meta">Research intern · Mar 2025 – Sep 2025</div><span class="lang-en">Research in AI for chemistry.</span><span class="lang-zh">从事 AI for Chemistry 研究。</span></div></div>
-  <div class="experience-row"><div class="experience-place">MSR AI4S Cambridge</div><div><div class="experience-meta">Research intern · Jan 2026 – May 2026</div><span class="lang-en">Research at the intersection of language models and chemistry.</span><span class="lang-zh">研究语言模型与化学的交叉问题。</span></div></div>
+<section class="home-section"><h2>Selected research experience</h2>
+  <div class="experience-row"><div class="experience-place">MSRA</div><div><div class="experience-meta">Research intern · May 2022 – Nov 2023</div>Research in AI for chemistry.</div></div>
+  <div class="experience-row"><div class="experience-place">Center for Algorithmic and Roboticized Synthesis, IBS</div><div><div class="experience-meta">Visiting research student · Oct 2024 – Dec 2024</div>Work on algorithmic and automated synthesis.</div></div>
+  <div class="experience-row"><div class="experience-place">MSR AI4S Beijing</div><div><div class="experience-meta">Research intern · Mar 2025 – Sep 2025</div>Research in AI for chemistry.</div></div>
+  <div class="experience-row"><div class="experience-place">MSR AI4S Cambridge</div><div><div class="experience-meta">Research intern · Jan 2026 – May 2026</div>Research at the intersection of language models and chemistry.</div></div>
 </section>
 
-<section class="home-section"><h2><span class="lang-en">Contact</span><span class="lang-zh">联系方式</span></h2><p><span class="lang-en">Feel free to reach out at</span><span class="lang-zh">欢迎通过以下方式联系我：</span></p><div class="contact-links"><a href="mailto:catalystforyou@outlook.com">Email</a><a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank" rel="noopener">Google Scholar</a><a href="https://github.com/catalystforyou" target="_blank" rel="noopener">GitHub</a><a href="/research/"><span class="lang-en">Full research profile ↗</span><span class="lang-zh">完整研究资料 ↗</span></a></div></section>
-
-<script>
-(function () { const key='homepage-language'; const buttons=document.querySelectorAll('[data-language]'); const setLanguage=(language)=>{ document.body.classList.toggle('lang-zh-active',language==='zh'); buttons.forEach((button)=>button.classList.toggle('is-active',button.dataset.language===language)); document.documentElement.lang=language==='zh'?'zh-CN':'en'; try{localStorage.setItem(key,language);}catch(_){} }; buttons.forEach((button)=>button.addEventListener('click',()=>setLanguage(button.dataset.language))); let initial='en'; try{initial=localStorage.getItem(key)||initial;}catch(_){} setLanguage(initial==='zh'?'zh':'en'); }());
-</script>
+<section class="home-section"><h2>Contact</h2><p>Feel free to reach out at</p><div class="contact-links"><a href="mailto:catalystforyou@outlook.com">Email</a><a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank" rel="noopener">Google Scholar</a><a href="https://github.com/catalystforyou" target="_blank" rel="noopener">GitHub</a><a href="/research/">Full research profile ↗</a></div></section>
