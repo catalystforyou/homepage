@@ -8,7 +8,7 @@ disableAnchoredHeadings: true
 
 <div class="handwritten-page">
 <style>
-.handwritten-page { position:relative; padding-bottom:1rem; }
+.handwritten-page { position:relative; padding:0 1.25rem 1.25rem; background:color-mix(in srgb, var(--code-bg) 38%, transparent); border-radius:12px; }
 .handwritten-back { display:inline-flex; margin:2rem 0 1.5rem; color:var(--secondary); font-size:.86rem; text-decoration:none; }.handwritten-back:hover { color:var(--primary); }
 .handwritten-flow { margin:0 0 2.8rem; }.handwritten-flow p { max-width:46rem; margin:0; line-height:1.95; }.handwritten-flow p + p { margin-top:1.25rem; }
 .handwritten-wishes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:2.8rem 0; }.handwritten-wish { padding:1.15rem 1.2rem 1.25rem; border:1px solid var(--border); border-radius:8px; }.handwritten-wish p { margin:0; line-height:1.85; }.handwritten-wish strong { display:block; margin-bottom:.55rem; font-size:1rem; font-weight:600; }
@@ -54,12 +54,12 @@ disableAnchoredHeadings: true
   <p>感谢你读到这里，如果你对这些问题感兴趣，或者对主页其他栏目里的内容感兴趣的话，欢迎通过下方的联系方式联系我。</p>
 </div>
 
-<p class="final-line">为谁风露立中宵</p>
-
 <section class="handwritten-contact handwritten-reveal">
   <p>欢迎来信，也欢迎从主页的其他入口继续逛逛。</p>
   <div class="contact-links"><a href="mailto:catalystforyou@outlook.com">Email</a><a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank" rel="noopener">Google Scholar</a><a href="https://github.com/catalystforyou" target="_blank" rel="noopener">GitHub</a></div>
 </section>
+
+<p class="final-line">为谁风露立中宵</p>
 
 <script>
 (function () {
