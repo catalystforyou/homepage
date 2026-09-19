@@ -1,82 +1,62 @@
 ---
-title: "About Me"
-date: 2025-12-05
+title: "Junren Li"
+date: 2026-09-15
 draft: false
+hideMeta: true
 ---
 
-<a href="/off-duty/life-diffusion-model/" class="geoguess-hint" title="A geoguess game inside my travel-photo map">
-    🎯 <em>geoguess inside</em> →
-</a>
+<div class="language-switcher" role="group" aria-label="Language">
+  <button type="button" class="language-button is-active" data-language="en">EN</button>
+  <span aria-hidden="true">/</span>
+  <button type="button" class="language-button" data-language="zh">中文</button>
+</div>
+
+<a href="/off-duty/life-diffusion-model/" class="geoguess-hint" title="A geoguess game inside my travel-photo map">🎯 <em>geoguess inside</em> →</a>
 
 <style>
-.geoguess-hint {
-    position: fixed;
-    bottom: 1.4em;
-    right: 1.4em;
-    z-index: 999;
-    padding: 0.55em 0.95em;
-    background: rgba(0, 0, 0, 0.06);
-    color: var(--primary, #1a1a1a) !important;
-    text-decoration: none;
-    border-radius: 999px;
-    font-size: 0.85em;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: transform 0.18s ease, background 0.18s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-.geoguess-hint:hover {
-    transform: translateY(-2px);
-    background: rgba(0, 0, 0, 0.1);
-}
-.geoguess-hint em { font-style: italic; }
-@media (prefers-color-scheme: dark) {
-    .geoguess-hint {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--primary) !important;
-    }
-    .geoguess-hint:hover { background: rgba(255, 255, 255, 0.14); }
-}
-@media (max-width: 480px) {
-    .geoguess-hint {
-        bottom: 0.8em;
-        right: 0.8em;
-        font-size: 0.78em;
-        padding: 0.45em 0.8em;
-    }
-}
+.language-switcher { display:flex; gap:.35rem; justify-content:flex-end; align-items:center; margin:-.6rem 0 1.2rem; font-size:.82rem; color:var(--secondary); }
+.language-button { border:0; background:transparent; color:var(--secondary); cursor:pointer; padding:.2rem .35rem; border-radius:4px; font:inherit; }
+.language-button:hover, .language-button.is-active { color:var(--primary); background:var(--code-bg); }
+.lang-en { display:revert; }
+.lang-zh { display:none; }
+body.lang-zh-active .lang-en { display:none; }
+body.lang-zh-active .lang-zh { display:revert; }
+.home-hero { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:2rem; align-items:start; }
+.home-hero figure { margin:0; }.home-hero img { width:100%; height:auto; border-radius:8px; display:block; }.home-hero figcaption { font-size:.82rem; color:var(--secondary); margin-top:.55rem; font-style:italic; }
+.home-section { margin-top:2.3rem; }.home-section h2 { margin-bottom:.8rem; }.recent-update { padding:.8rem 1rem; border-left:3px solid var(--primary); background:var(--code-bg); border-radius:0 6px 6px 0; }
+.work-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; }.work-card { border:1px solid var(--border); border-radius:8px; padding:1rem; height:100%; box-sizing:border-box; }.work-card h3 { margin:0 0 .45rem; font-size:1.05rem; }.work-card p { margin:0 0 .7rem; font-size:.93rem; }.work-card a { font-size:.88rem; }
+.experience-row { display:grid; grid-template-columns:minmax(180px,.8fr) minmax(0,2fr); gap:1rem; padding:.75rem 0; border-bottom:1px solid var(--border); }.experience-row:last-child { border-bottom:0; }.experience-place { font-weight:600; }.experience-meta { color:var(--secondary); font-size:.92rem; }
+.contact-links { display:flex; flex-wrap:wrap; gap:.8rem 1.2rem; }.contact-links a { white-space:nowrap; }
+.geoguess-hint { position:fixed; bottom:1.4em; right:1.4em; z-index:999; padding:.55em .95em; background:rgba(0,0,0,.06); color:var(--primary)!important; text-decoration:none; border-radius:999px; font-size:.85em; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:transform .18s ease,background .18s ease; box-shadow:0 1px 4px rgba(0,0,0,.08); }.geoguess-hint:hover { transform:translateY(-2px); background:rgba(0,0,0,.1); }.geoguess-hint em { font-style:italic; }
+@media (prefers-color-scheme:dark) { .geoguess-hint { background:rgba(255,255,255,.08); }.geoguess-hint:hover { background:rgba(255,255,255,.14); } }
+@media (max-width:760px) { .home-hero { grid-template-columns:1fr; }.home-hero figure { max-width:360px; }.work-grid { grid-template-columns:1fr; }.experience-row { grid-template-columns:1fr; gap:.2rem; } } @media (max-width:480px) { .geoguess-hint { bottom:.8em; right:.8em; font-size:.78em; padding:.45em .8em; } }
 </style>
 
-<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
-    <div style="flex: 0 0 300px; max-width: 100%;">
-        <img src="https://img.junren.li/Lindau_talk.jpg" alt="Junren Li at Lindau" style="width: 100%; height: auto; border-radius: 8px;">
-        <p style="font-size: 0.9em; color: #666; margin-top: 10px; font-style: italic;">
-            I am honored to attend and give a talk at the 74th Lindau Nobel Laureate Meeting as a selected young scientist in July 2025.
-        </p>
-    </div>
-    <div style="flex: 1; min-width: 300px;">
-        <p>
-            I am currently a Ph.D. candidate at the College of Chemistry and Molecular Engineering, Peking University, where I also received my B.S. in Chemistry (2018–2022). I am fortunate to be advised by Prof. Luhua Lai and Prof. Zhirong Liu.
-        </p>
-        <p>
-            I work at the intersection of chemistry and large language models, and I think of myself less as someone who applies AI to chemistry than as an AGI-native researcher. I take it as a working assumption that frontier models will keep absorbing the routine layer of research; what stays scarce is judgment, taste, and the willingness to ask which problems are worth solving at all. Polishing another accuracy point on a saturated benchmark is no longer where I want to spend that judgment.
-        </p>
-        <p>
-            Concretely, my work falls into three layers:
-        </p>
-        <ul>
-            <li><strong>Measuring the frontier:</strong> building benchmarks and hard evaluations that probe where today's models actually fail on real scientific problems (e.g. <a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener">SUPERChem</a>, and earlier work mapping the ceiling of single-step retrosynthesis).</li>
-            <li><strong>Forging tools:</strong> turning model capability into grounded, verifiable tools that scientists actually use, such as <a href="https://syncraft.junren.li" target="_blank" rel="noopener">SynCraft</a> for synthesizability optimization and <a href="https://revenant.junren.li" target="_blank" rel="noopener">Revenant</a> for reaction-failure diagnosis.</li>
-            <li><strong>Probing beyond it (AGI+1):</strong> using domain insight plus coding agents as leverage to enter problems that would once have taken a whole group years to approach.</li>
-        </ul>
-        <p>
-            Beyond my academic studies at Peking University, my journey has been shaped by continuous engagement with world-class research labs. I have spent extensive time as a research intern within the Microsoft Research (MSR) ecosystem, collaborating with leading experts to push the boundaries of AI for Science. This includes my time at MSRA (May 2022 – Nov 2023), MSR AI4S Beijing (Mar 2025 – Sep 2025), and most recently MSR AI4S Cambridge (Jan 2026 – May 2026), where I explored the intersection of LLMs and chemistry.
-        </p>
-        <p>
-            To ensure my computational work remains grounded in physical reality, I also served as a visiting research student at the Center for Algorithmic and Roboticized Synthesis, IBS (Oct 2024 – Dec 2024). Advised by Prof. Bartosz Grzybowski, I gained valuable insights into chemical automation and catalyst development, effectively balancing my AI expertise with deep chemical domain knowledge.
-        </p>
-        <p>
-            I am always open to discussions on AI, Chemistry, and the future of automated science, you can also find my publications on <a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank">Google Scholar</a>. Feel free to reach out me at <a href="catalystforyou@outlook.com" target="_blank">catalystforyou@outlook.com</a>! 
-        </p>
-    </div>
+<div class="home-hero">
+  <div class="home-intro">
+    <div class="lang-en"><p>I’m Junren Li (李隽仁), a chemistry PhD candidate at Peking University. My advisors are Luhua Lai and Zhirong Liu, and I expect to graduate in June 2027. I received my B.S. in Chemistry from Peking University (2018–2022).</p><p>My research covers synthesis planning, chemical reasoning, and the evaluation of language models. I am increasingly interested in scientific agents: how to choose useful tasks, provide reliable feedback, and evaluate whether their work helps solve scientific problems.</p><p>I describe myself as an <strong>AGI-native researcher</strong>. I use models and coding agents throughout my work, while spending much of my own effort on choosing problems, understanding results, and deciding what needs to be checked.</p></div>
+    <div class="lang-zh"><p>我是李隽仁，目前是北京大学化学博士候选人，导师为赖鲁华教授和刘志荣教授，预计于 2027 年 6 月毕业。本科就读于北京大学化学专业（2018–2022）。</p><p>我的研究涉及合成规划、化学推理与语言模型评测。近期我尤其关注 scientific agents：如何选择有价值的任务、提供可靠的反馈，以及评估这些系统是否真正帮助解决科学问题。</p><p>我把自己描述为一名 <strong>AGI-native researcher</strong>。我在研究中持续使用模型和编程代理，把更多精力放在选择问题、理解结果，以及判断哪些地方需要核查。</p></div>
+  </div>
+  <figure><img src="https://img.junren.li/Lindau_talk.jpg" alt="Junren Li at the Lindau Nobel Laureate Meeting"><figcaption><span class="lang-en">74th Lindau Nobel Laureate Meeting · July 2025</span><span class="lang-zh">第 74 届林道诺贝尔奖获得者大会 · 2025 年 7 月</span></figcaption></figure>
 </div>
+
+<section class="home-section"><h2><span class="lang-en">Recent updates</span><span class="lang-zh">近期动态</span></h2><div class="recent-update"><div><span class="lang-en"><strong>SynCraft</strong> has been accepted by <em>Nature Machine Intelligence</em>.</span><span class="lang-zh"><strong>SynCraft</strong> 已被 <em>Nature Machine Intelligence</em> 接收。</span></div><div style="margin-top:.55rem;"><span class="lang-en"><strong>RetroChimera</strong> has been accepted by <em>Nature</em>.</span><span class="lang-zh"><strong>RetroChimera</strong> 已被 <em>Nature</em> 接收。</span></div></div></section>
+
+<section class="home-section"><h2><span class="lang-en">Selected work</span><span class="lang-zh">代表性工作</span></h2><div class="work-grid">
+  <article class="work-card"><h3><a href="https://syncraft.junren.li" target="_blank" rel="noopener">SynCraft</a></h3><p><span class="lang-en">Improving molecular synthesizability with LLM-guided structural edits.</span><span class="lang-zh">用大语言模型引导的结构编辑提升分子可合成性。</span></p><a href="https://arxiv.org/abs/2512.20333" target="_blank" rel="noopener"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a></article>
+  <article class="work-card"><h3><a href="https://arxiv.org/abs/2512.13668" target="_blank" rel="noopener">QFANG</a></h3><p><span class="lang-en">A reasoning model for generating experimental procedures from chemical reactions.</span><span class="lang-zh">从化学反应生成实验操作流程的推理模型。</span></p><a href="https://arxiv.org/abs/2512.13668" target="_blank" rel="noopener"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a></article>
+  <article class="work-card"><h3><a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener">SUPERChem</a></h3><p><span class="lang-en">Evaluating chemical reasoning beyond final-answer accuracy.</span><span class="lang-zh">评估超越最终答案准确率的化学推理能力。</span></p><a href="https://arxiv.org/abs/2512.01274" target="_blank" rel="noopener"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a></article>
+</div></section>
+
+<section class="home-section"><h2><span class="lang-en">Selected research experience</span><span class="lang-zh">研究经历</span></h2>
+  <div class="experience-row"><div class="experience-place">MSRA</div><div><div class="experience-meta">Research intern · May 2022 – Nov 2023</div><span class="lang-en">Research in AI for chemistry.</span><span class="lang-zh">从事 AI for Chemistry 研究。</span></div></div>
+  <div class="experience-row"><div class="experience-place">Center for Algorithmic and Roboticized Synthesis, IBS</div><div><div class="experience-meta">Visiting research student · Oct 2024 – Dec 2024</div><span class="lang-en">Work on algorithmic and automated synthesis.</span><span class="lang-zh">参与算法化与自动化合成研究。</span></div></div>
+  <div class="experience-row"><div class="experience-place">MSR AI4S Beijing</div><div><div class="experience-meta">Research intern · Mar 2025 – Sep 2025</div><span class="lang-en">Research in AI for chemistry.</span><span class="lang-zh">从事 AI for Chemistry 研究。</span></div></div>
+  <div class="experience-row"><div class="experience-place">MSR AI4S Cambridge</div><div><div class="experience-meta">Research intern · Jan 2026 – May 2026</div><span class="lang-en">Research at the intersection of language models and chemistry.</span><span class="lang-zh">研究语言模型与化学的交叉问题。</span></div></div>
+</section>
+
+<section class="home-section"><h2><span class="lang-en">Contact</span><span class="lang-zh">联系方式</span></h2><p><span class="lang-en">Feel free to reach out at</span><span class="lang-zh">欢迎通过以下方式联系我：</span></p><div class="contact-links"><a href="mailto:catalystforyou@outlook.com">Email</a><a href="https://scholar.google.com/citations?user=0Fu_GpMmuUcC" target="_blank" rel="noopener">Google Scholar</a><a href="https://github.com/catalystforyou" target="_blank" rel="noopener">GitHub</a><a href="/research/"><span class="lang-en">Full research profile ↗</span><span class="lang-zh">完整研究资料 ↗</span></a></div></section>
+
+<script>
+(function () { const key='homepage-language'; const buttons=document.querySelectorAll('[data-language]'); const setLanguage=(language)=>{ document.body.classList.toggle('lang-zh-active',language==='zh'); buttons.forEach((button)=>button.classList.toggle('is-active',button.dataset.language===language)); document.documentElement.lang=language==='zh'?'zh-CN':'en'; try{localStorage.setItem(key,language);}catch(_){} }; buttons.forEach((button)=>button.addEventListener('click',()=>setLanguage(button.dataset.language))); let initial='en'; try{initial=localStorage.getItem(key)||initial;}catch(_){} setLanguage(initial==='zh'?'zh':'en'); }());
+</script>
