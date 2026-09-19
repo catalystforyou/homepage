@@ -5,9 +5,16 @@ draft: false
 hideMeta: true
 ---
 
+<nav class="language-switcher" aria-label="Language">
+  <a class="is-active" href="/" aria-current="page">EN</a>
+  <span aria-hidden="true">/</span>
+  <a href="/zh/">中文</a>
+</nav>
+
 <a href="/off-duty/life-diffusion-model/" class="geoguess-hint" title="A geoguess game inside my travel-photo map">🎯 <em>geoguess inside</em> →</a>
 
 <style>
+.language-switcher { display:flex; gap:.35rem; justify-content:flex-end; align-items:center; margin:-.6rem 0 1.2rem; font-size:.82rem; color:var(--secondary); }.language-switcher a { color:inherit; text-decoration:none; padding:.2rem .35rem; border-radius:4px; }.language-switcher a:hover, .language-switcher a.is-active { color:var(--primary); background:var(--code-bg); }
 .home-hero { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:2rem; align-items:start; }
 .home-hero figure { margin:0; }.home-hero img { width:100%; height:auto; border-radius:8px; display:block; }.home-hero figcaption { font-size:.82rem; color:var(--secondary); margin-top:.55rem; font-style:italic; }
 .home-section { margin-top:2.3rem; }.home-section h2 { margin-bottom:.8rem; }.recent-update { padding:.8rem 1rem; border-left:3px solid var(--primary); background:var(--code-bg); border-radius:0 6px 6px 0; }
